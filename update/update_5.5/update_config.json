@@ -1,0 +1,216 @@
+{
+  "directory": [
+
+  ],
+  "sql_file": "",
+  "files": [
+    {
+        "root_directory"    : "update/update_5.5/controllers/Admin.php",
+        "update_directory"  : "application/controllers/Admin.php"
+    },
+    {
+        "root_directory"    : "update/update_5.5/models/Email_model.php",
+        "update_directory"  : "application/models/Email_model.php"
+    },
+    {
+        "root_directory"    : "update/update_5.5/views/others/login.php",
+        "update_directory"  : "application/views/backend/login.php"
+    },
+    {
+        "root_directory"    : "update/update_5.5/views/others/forgot_password.php",
+        "update_directory"  : "application/views/backend/forgot_password.php"
+    },
+    {
+        "root_directory"    : "update/update_5.5/views/others/footer.php",
+        "update_directory"  : "application/views/backend/footer.php"
+    },
+    {
+        "root_directory"    : "update/update_5.5/views/others/sample_form.php",
+        "update_directory"  : "application/views/backend/sample_form.php"
+    },
+    {
+        "root_directory"    : "update/update_5.5/views/accountant/manage_profile.php",
+        "update_directory"  : "application/views/backend/accountant/manage_profile.php"
+    },
+    {
+        "root_directory"    : "update/update_5.5/views/admin/accountant_add.php",
+        "update_directory"  : "application/views/backend/admin/accountant_add.php"
+    },
+    {
+        "root_directory"    : "update/update_5.5/views/admin/accountant_edit.php",
+        "update_directory"  : "application/views/backend/admin/accountant_edit.php"
+    },
+    {
+        "root_directory"    : "update/update_5.5/views/admin/accountant.php",
+        "update_directory"  : "application/views/backend/admin/accountant.php"
+    },
+    {
+        "root_directory"    : "update/update_5.5/views/admin/librarian_add.php",
+        "update_directory"  : "application/views/backend/admin/librarian_add.php"
+    },
+    {
+        "root_directory"    : "update/update_5.5/views/admin/librarian_edit.php",
+        "update_directory"  : "application/views/backend/admin/librarian_edit.php"
+    },
+    {
+        "root_directory"    : "update/update_5.5/views/admin/librarian.php",
+        "update_directory"  : "application/views/backend/admin/librarian.php"
+    },
+    {
+        "root_directory"    : "update/update_5.5/views/admin/manage_profile.php",
+        "update_directory"  : "application/views/backend/admin/manage_profile.php"
+    },
+    {
+        "root_directory"    : "update/update_5.5/views/admin/modal_dormitory_student.php",
+        "update_directory"  : "application/views/backend/admin/modal_dormitory_student.php"
+    },
+    {
+        "root_directory"    : "update/update_5.5/views/admin/modal_edit_teacher.php",
+        "update_directory"  : "application/views/backend/admin/modal_edit_teacher.php"
+    },
+    {
+        "root_directory"    : "update/update_5.5/views/admin/modal_parent_add.php",
+        "update_directory"  : "application/views/backend/admin/modal_parent_add.php"
+    },
+    {
+        "root_directory"    : "update/update_5.5/views/admin/modal_parent_edit.php",
+        "update_directory"  : "application/views/backend/admin/modal_parent_edit.php"
+    },
+    {
+        "root_directory"    : "update/update_5.5/views/admin/modal_student_edit.php",
+        "update_directory"  : "application/views/backend/admin/modal_student_edit.php"
+    },
+    {
+        "root_directory"    : "update/update_5.5/views/admin/modal_student_profile.php",
+        "update_directory"  : "application/views/backend/admin/modal_student_profile.php"
+    },
+    {
+        "root_directory"    : "update/update_5.5/views/admin/modal_teacher_add.php",
+        "update_directory"  : "application/views/backend/admin/modal_teacher_add.php"
+    },
+    {
+        "root_directory"    : "update/update_5.5/views/admin/modal_teacher_edit.php",
+        "update_directory"  : "application/views/backend/admin/modal_teacher_edit.php"
+    },
+    {
+        "root_directory"    : "update/update_5.5/views/admin/modal_transport_student.php",
+        "update_directory"  : "application/views/backend/admin/modal_transport_student.php"
+    },
+    {
+        "root_directory"    : "update/update_5.5/views/admin/parent.php",
+        "update_directory"  : "application/views/backend/admin/parent.php"
+    },
+    {
+        "root_directory"    : "update/update_5.5/views/admin/search_result.php",
+        "update_directory"  : "application/views/backend/admin/search_result.php"
+    },
+    {
+        "root_directory"    : "update/update_5.5/views/admin/student_add.php",
+        "update_directory"  : "application/views/backend/admin/student_add.php"
+    },
+    {
+        "root_directory"    : "update/update_5.5/views/admin/student_bulk_add_append.php",
+        "update_directory"  : "application/views/backend/admin/student_bulk_add_append.php"
+    },
+    {
+        "root_directory"    : "update/update_5.5/views/admin/student_information.php",
+        "update_directory"  : "application/views/backend/admin/student_information.php"
+    },
+    {
+        "root_directory"    : "update/update_5.5/views/admin/teacher.php",
+        "update_directory"  : "application/views/backend/admin/teacher.php"
+    },
+    {
+        "root_directory"    : "update/update_5.5/views/librarian/manage_profile.php",
+        "update_directory"  : "application/views/backend/librarian/manage_profile.php"
+    },
+    {
+        "root_directory"    : "update/update_5.5/views/parent/manage_profile.php",
+        "update_directory"  : "application/views/backend/parent/manage_profile.php"
+    },
+    {
+        "root_directory"    : "update/update_5.5/views/parent/pay_with_payumoney.php",
+        "update_directory"  : "application/views/backend/parent/pay_with_payumoney.php"
+    },
+    {
+        "root_directory"    : "update/update_5.5/views/parent/student_information.php",
+        "update_directory"  : "application/views/backend/parent/student_information.php"
+    },
+    {
+        "root_directory"    : "update/update_5.5/views/parent/teacher.php",
+        "update_directory"  : "application/views/backend/parent/teacher.php"
+    },
+    {
+        "root_directory"    : "update/update_5.5/views/student/manage_profile.php",
+        "update_directory"  : "application/views/backend/student/manage_profile.php"
+    },
+    {
+        "root_directory"    : "update/update_5.5/views/student/pay_with_payumoney.php",
+        "update_directory"  : "application/views/backend/student/pay_with_payumoney.php"
+    },
+    {
+        "root_directory"    : "update/update_5.5/views/student/student_information.php",
+        "update_directory"  : "application/views/backend/student/student_information.php"
+    },
+    {
+        "root_directory"    : "update/update_5.5/views/student/teacher.php",
+        "update_directory"  : "application/views/backend/student/teacher.php"
+    },
+    {
+        "root_directory"    : "update/update_5.5/views/teacher/manage_profile.php",
+        "update_directory"  : "application/views/backend/teacher/manage_profile.php"
+    },
+    {
+        "root_directory"    : "update/update_5.5/views/teacher/modal_student_edit.php",
+        "update_directory"  : "application/views/backend/teacher/modal_student_edit.php"
+    },
+    {
+        "root_directory"    : "update/update_5.5/views/teacher/modal_student_profile.php",
+        "update_directory"  : "application/views/backend/teacher/modal_student_profile.php"
+    },
+    {
+        "root_directory"    : "update/update_5.5/views/teacher/search_result.php",
+        "update_directory"  : "application/views/backend/teacher/search_result.php"
+    },
+    {
+        "root_directory"    : "update/update_5.5/views/teacher/student_add.php",
+        "update_directory"  : "application/views/backend/teacher/student_add.php"
+    },
+    {
+        "root_directory"    : "update/update_5.5/views/teacher/student_information.php",
+        "update_directory"  : "application/views/backend/teacher/student_information.php"
+    },
+    {
+        "root_directory"    : "update/update_5.5/views/teacher/teacher.php",
+        "update_directory"  : "application/views/backend/teacher/teacher.php"
+    },
+    {
+        "root_directory"    : "update/update_5.5/views/admin/manage_attendance_view.php",
+        "update_directory"  : "application/views/backend/admin/manage_attendance_view.php"
+    },
+    {
+        "root_directory"    : "update/update_5.5/views/teacher/manage_attendance_view.php",
+        "update_directory"  : "application/views/backend/teacher/manage_attendance_view.php"
+    },
+    {
+        "root_directory"    : "update/update_5.5/views/admin/navigation.php",
+        "update_directory"  : "application/views/backend/admin/navigation.php"
+    },
+    {
+        "root_directory"    : "update/update_5.5/views/admin/admin.php",
+        "update_directory"  : "application/views/backend/admin/admin.php"
+    },
+    {
+        "root_directory"    : "update/update_5.5/views/admin/modal_admin_add.php",
+        "update_directory"  : "application/views/backend/admin/modal_admin_add.php"
+    },
+    {
+        "root_directory"    : "update/update_5.5/views/admin/modal_admin_edit.php",
+        "update_directory"  : "application/views/backend/admin/modal_admin_edit.php"
+    },
+    {
+        "root_directory"    : "update/update_5.5/views/admin/modal_edit_subject.php",
+        "update_directory"  : "application/views/backend/admin/modal_edit_subject.php"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+[12-Aug-2018 05:27:35 Asia/Dhaka] PHP Fatal error:  Cannot redeclare Admin::get_subject() in /home/periyasj/xms.stxaviersjaipur.org/application/controllers/Admin.php on line 1561
+[12-Aug-2018 05:27:52 Asia/Dhaka] PHP Fatal error:  Cannot redeclare Admin::get_subject() in /home/periyasj/xms.stxaviersjaipur.org/application/controllers/Admin.php on line 1561
+[12-Aug-2018 05:29:21 Asia/Dhaka] PHP Fatal error:  Cannot redeclare Admin::get_subject() in /home/periyasj/xms.stxaviersjaipur.org/application/controllers/Admin.php on line 1561
+[12-Aug-2018 05:29:58 Asia/Dhaka] PHP Fatal error:  Cannot redeclare Admin::get_subject() in /home/periyasj/xms.stxaviersjaipur.org/application/controllers/Admin.php on line 1561
+[12-Aug-2018 05:30:03 Asia/Dhaka] PHP Fatal error:  Cannot redeclare Admin::get_subject() in /home/periyasj/xms.stxaviersjaipur.org/application/controllers/Admin.php on line 1561
+[12-Aug-2018 20:22:58 Asia/Dhaka] PHP Fatal error:  Call to undefined method Email_model::send_smtp_mail() in /home/periyasj/xms.stxaviersjaipur.org/application/models/Email_model.php on line 26
+[12-Aug-2018 20:23:01 Asia/Dhaka] PHP Fatal error:  Call to undefined method Email_model::send_smtp_mail() in /home/periyasj/xms.stxaviersjaipur.org/application/models/Email_model.php on line 26
+[24-Aug-2018 03:28:19 Asia/Dhaka] PHP Parse error:  syntax error, unexpected ';', expecting ')' in /home/periyasj/xms.stxaviersjaipur.org/application/views/backend/teacher/manage_attendance.php on line 69
+[24-Aug-2018 03:39:26 Asia/Dhaka] PHP Parse error:  syntax error, unexpected ';' in /home/periyasj/xms.stxaviersjaipur.org/application/controllers/Teacher.php on line 545
+[24-Aug-2018 03:39:29 Asia/Dhaka] PHP Parse error:  syntax error, unexpected ';' in /home/periyasj/xms.stxaviersjaipur.org/application/controllers/Teacher.php on line 545
+[24-Sep-2018 15:11:31 Asia/Dhaka] PHP Fatal error:  Cannot redeclare Teacher::attendance_report_view() in /home/periyasj/xms.stxaviersjaipur.org/application/controllers/Teacher.php on line 671
+[24-Sep-2018 15:13:20 Asia/Dhaka] PHP Fatal error:  Cannot redeclare Teacher::attendance_report_view() in /home/periyasj/xms.stxaviersjaipur.org/application/controllers/Teacher.php on line 671
+[24-Sep-2018 15:16:00 Asia/Dhaka] PHP Fatal error:  Cannot redeclare Teacher::attendance_report_view() in /home/periyasj/xms.stxaviersjaipur.org/application/controllers/Teacher.php on line 671
+[24-Sep-2018 15:16:04 Asia/Dhaka] PHP Fatal error:  Cannot redeclare Teacher::attendance_report_view() in /home/periyasj/xms.stxaviersjaipur.org/application/controllers/Teacher.php on line 671
+[24-Sep-2018 20:52:33 Asia/Dhaka] PHP Fatal error:  Cannot redeclare Teacher::attendance_report_view() in /home/periyasj/xms.stxaviersjaipur.org/application/controllers/Teacher.php on line 664
+[24-Sep-2018 20:52:36 Asia/Dhaka] PHP Fatal error:  Cannot redeclare Teacher::attendance_report_view() in /home/periyasj/xms.stxaviersjaipur.org/application/controllers/Teacher.php on line 664
+[25-Sep-2018 09:15:30 Asia/Dhaka] PHP Parse error:  syntax error, unexpected 'endif' (T_ENDIF) in /home/periyasj/xms.stxaviersjaipur.org/application/views/backend/teacher/attendance_report_view_monthly.php on line 80
