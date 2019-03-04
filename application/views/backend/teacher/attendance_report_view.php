@@ -26,6 +26,7 @@
                     ?>
                     <td style="text-align: center;">Period <?php echo $i; ?></td>
                 <?php } ?>
+                <td style="text-align: center;">Total</td>
 
             </tr>
             </thead>
@@ -68,13 +69,21 @@
                     <td style="text-align: center;">
                         <?php
                         $present = $teacher->getDailyPresentHistory($data, $j, $row->student_id);
-                        if ($present == 1) echo '<i class="entypo-record" style="color: #00a651;">Present</i>';
+                        if ($present == 1)
+                        {
+                            $total = $total + $present;
+                            echo '<i class="entypo-record" style="color: #00a651;">Present</i>';
+                        }
+
                         if ($present == 2) echo '<i class="entypo-record" style="color: #ee4749;">Absent</i>';
                         if ($present == 0) echo '-';
-                        $total = $total + $present; ?>
+                        ?>
                     </td>
-                <?php } ?>
-                <?php endforeach; ?>
+                <?php }
+                echo '<td><b style="color: #00a651;">'.$total.'</b></td>'; ?>
+                <?php endforeach;
+
+                ?>
             </tr>
 
             <?php ?>
