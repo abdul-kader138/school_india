@@ -6,11 +6,13 @@
     <h4><strong>Date:</strong> <?php echo date("d-m-Y", $timestamp); ?></h4>
     <h4><strong>Class:</strong> <?php echo $class_name; ?></h4>
     <h4><strong>Section:</strong> <?php echo $section_name; ?></h4>
+    <button type="button" class="btn btn-xs btn-default no-print pull-right" style="margin-right:15px;" onclick="window.print();">
+        <i class="fa fa-print"></i> Print
+    </button>
 </center>
 
 <br>
 <hr/>
-
 <div class="row">
     <div class="col-md-12">
         <table class="table table-bordered" id="my_table">
@@ -56,9 +58,7 @@
             }
 
 
-            foreach ($student_data
-
-                     as $row): ?>
+            foreach ($student_data as $row): ?>
             <tr>
                 <td style="text-align: center;">
                     <?php echo $row->name; ?>
@@ -74,13 +74,12 @@
                             $total = $total + $present;
                             echo '<i class="entypo-record" style="color: #00a651;">Present</i>';
                         }
-
                         if ($present == 2) echo '<i class="entypo-record" style="color: #ee4749;">Absent</i>';
                         if ($present == 0) echo '-';
                         ?>
                     </td>
                 <?php }
-                echo '<td><b style="color: #00a651;">'.$total.'</b></td>'; ?>
+                echo '<td style="text-align: center;"><b style="color: #00a651;">'.$total.'</b></td>'; ?>
                 <?php endforeach;
 
                 ?>
@@ -91,12 +90,12 @@
 
             </tbody>
         </table>
-        <center>
-            <a href="<?php echo site_url('teacher/attendance_report_print_view/' . $class_id . '/' . $section_id . '/' . $timestamp); ?>"
-               class="btn btn-primary" target="_blank">
-                <?php echo get_phrase('print_attendance_sheet'); ?>
-            </a>
-        </center>
+<!--        <center>-->
+<!--            <a href="--><?php //echo site_url('teacher/attendance_report_print_view/' . $class_id . '/' . $section_id . '/' . $timestamp); ?><!--"-->
+<!--               class="btn btn-primary" target="_blank">-->
+<!--                --><?php //echo get_phrase('print_attendance_sheet'); ?>
+<!--            </a>-->
+<!--        </center>-->
     </div>
 </div>
 
