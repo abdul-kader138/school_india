@@ -592,10 +592,10 @@ class Teacher extends CI_Controller
 
         $class_name = $this->db->get_where('class', array('class_id' => $class_id))->row()->name;
         $section_name = $this->db->get_where('section', array('section_id' => $section_id))->row()->name;
+        $page_data['teacher'] = $this;
         $page_data['class_id'] = $class_id;
         $page_data['section_id'] = $section_id;
         $page_data['timestamp'] = $unix_timestamp;
-
         $page_data['page_name'] = 'attendance_report_view';
         $page_data['page_title'] = get_phrase('daily_attendance_report');
         $this->load->view('backend/index', $page_data);
@@ -1198,5 +1198,17 @@ class Teacher extends CI_Controller
             }
         }
         return $present;
+    }
+
+    public function getDailyPresentHistory($attendences_details, $counter, $student_id)
+    {
+        $present_info = 0;
+        foreach ($attendences_details as $info) {
+            if ($info->ids == $student_id && $info->period == $counter) {
+                $present_info = $info->status;
+                break;
+            }
+        }
+        return $present_info;
     }
 }
