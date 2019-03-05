@@ -690,14 +690,13 @@ class Teacher extends CI_Controller
         if ($this->session->userdata('teacher_login') != 1)
             redirect(base_url(), 'refresh');
 
-        $class_name = $this->db->get_where('class', array('class_id' => $class_id))->row()->name;
-        $section_name = $this->db->get_where('section', array('section_id' => $section_id))->row()->name;
         $page_data['class_id'] = $class_id;
         $page_data['section_id'] = $section_id;
         $page_data['month'] = $month;
         $page_data['sessional_year'] = $sessional_year;
+        $page_data['teacher'] = $this;
         $page_data['page_name'] = 'attendance_report_view_yearly';
-        $page_data['page_title'] = get_phrase('attendance_report_of_class') . ' ' . $class_name . ' : ' . get_phrase('section') . ' ' . $section_name;
+        $page_data['page_title'] = get_phrase('attendance_report_yearly');
         $this->load->view('backend/index', $page_data);
     }
 
@@ -736,7 +735,7 @@ class Teacher extends CI_Controller
         $this->load->view('backend/index', $page_data);
     }
 
-    function attendance_report_view_subject($class_id = '', $section_id = '', $month = '', $sessional_year = '',$subject_id='')
+    function attendance_report_view_subject($class_id = '', $section_id = '', $month = '', $sessional_year = '', $subject_id = '')
     {
         if ($this->session->userdata('teacher_login') != 1)
             redirect(base_url(), 'refresh');
@@ -774,7 +773,7 @@ class Teacher extends CI_Controller
         $data['month'] = $this->input->post('month');
         $data['subject_id'] = $this->input->post('subject_id');
         $data['sessional_year'] = $this->input->post('sessional_year');
-        redirect(site_url('teacher/attendance_report_view_subject/' . $data['class_id'] . '/' . $data['section_id'] . '/' . $data['month'] . '/' . $data['sessional_year'].'/' . $data['subject_id']), 'refresh');
+        redirect(site_url('teacher/attendance_report_view_subject/' . $data['class_id'] . '/' . $data['section_id'] . '/' . $data['month'] . '/' . $data['sessional_year'] . '/' . $data['subject_id']), 'refresh');
     }
 
 
@@ -1208,5 +1207,64 @@ class Teacher extends CI_Controller
             }
         }
         return $present_info;
+    }
+
+    public function getYearlyPresentHistory($attendences_details, $counter, $student_id)
+    {
+        $present = "0";
+        foreach ($attendences_details as $info) {
+            if ($info->ids == $student_id && $info->month == $counter) {
+                $present = $info->present;
+                break;
+            }
+        }
+        return $present;
+    }
+
+    public function getMonthName($val)
+    {
+        $month = "";
+        switch ($val) {
+            case "1":
+                $month = "January";
+                break;
+            case "2":
+                $month = "February";
+                break;
+            case "3":
+                $month = "March";
+                break;
+            case "4":
+                $month = "April";
+                break;
+            case "5":
+                $month = "May";
+                break;
+            case "6":
+                $month = "June";
+                break;
+            case "7":
+                $month = "July";
+                break;
+            case "8":
+                $month = "August";
+                break;
+            case "9":
+                $month = "September";
+                break;
+            case "10":
+                $month = "October";
+                break;
+            case "11":
+                $month = "November";
+                break;
+            case "12":
+                $month = "December";
+                break;
+            default:
+                $month = "";
+                break;
+        }
+        return $month;
     }
 }
