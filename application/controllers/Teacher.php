@@ -12,8 +12,6 @@ if (!defined('BASEPATH'))
 
 class Teacher extends CI_Controller
 {
-
-
     function __construct()
     {
         parent::__construct();
@@ -648,7 +646,7 @@ class Teacher extends CI_Controller
         $page_data['sessional_year'] = $sessional_year;
         $page_data['page_name'] = 'attendance_report_view_monthly';
         $page_data['teacher'] = $this;
-        $page_data['page_title'] = get_phrase('attendance_report_of_class') . ' ' . $class_name . ' : ' . get_phrase('section') . ' ' . $section_name;
+        $page_data['page_title'] = get_phrase('attendance_report_monthly');
         $this->load->view('backend/index', $page_data);
     }
 
@@ -738,19 +736,18 @@ class Teacher extends CI_Controller
         $this->load->view('backend/index', $page_data);
     }
 
-    function attendance_report_view_subject($class_id = '', $section_id = '', $month = '', $sessional_year = '')
+    function attendance_report_view_subject($class_id = '', $section_id = '', $month = '', $sessional_year = '',$subject_id='')
     {
         if ($this->session->userdata('teacher_login') != 1)
             redirect(base_url(), 'refresh');
-
-        $class_name = $this->db->get_where('class', array('class_id' => $class_id))->row()->name;
-        $section_name = $this->db->get_where('section', array('section_id' => $section_id))->row()->name;
         $page_data['class_id'] = $class_id;
         $page_data['section_id'] = $section_id;
+        $page_data['subject_id'] = $subject_id;
         $page_data['month'] = $month;
         $page_data['sessional_year'] = $sessional_year;
+        $page_data['teacher'] = $this;
         $page_data['page_name'] = 'attendance_report_view_subject';
-        $page_data['page_title'] = get_phrase('attendance_report_of_class') . ' ' . $class_name . ' : ' . get_phrase('section') . ' ' . $section_name;
+        $page_data['page_title'] = get_phrase('attendance_report_subject_wise');
         $this->load->view('backend/index', $page_data);
     }
 
@@ -775,8 +772,9 @@ class Teacher extends CI_Controller
         $data['class_id'] = $this->input->post('class_id');
         $data['section_id'] = $this->input->post('section_id');
         $data['month'] = $this->input->post('month');
+        $data['subject_id'] = $this->input->post('subject_id');
         $data['sessional_year'] = $this->input->post('sessional_year');
-        redirect(site_url('teacher/attendance_report_view_subject/' . $data['class_id'] . '/' . $data['section_id'] . '/' . $data['month'] . '/' . $data['sessional_year']), 'refresh');
+        redirect(site_url('teacher/attendance_report_view_subject/' . $data['class_id'] . '/' . $data['section_id'] . '/' . $data['month'] . '/' . $data['sessional_year'].'/' . $data['subject_id']), 'refresh');
     }
 
 

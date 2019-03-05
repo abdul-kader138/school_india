@@ -39,7 +39,7 @@
 
             $data = array();
             // get all enrolled student  - codelover138@gmail.com
-            $sql = 'select ids,period,status, classes, dates  from (SELECT student_id as ids,period,status, class_id as classes,from_unixtime(timestamp,"%Y-%m-%d") as dates, timestamp as times FROM `attendance` where attendance.class_id=' . $class_id . ' and attendance.section_id=' . $section_id . ' and timestamp=' . $timestamp . '  and  attendance.year="' . $running_year . '"group by attendance.period,attendance.student_id order by attendance.student_id,attendance.period) atten INNER join student on atten.ids=student.student_id ORDER by ids,period';
+            $sql = 'select ids,period,status, classes, dates  from (SELECT student_id as ids,period,status, class_id as classes,from_unixtime(timestamp,"%Y-%m-%d") as dates, timestamp as times FROM `attendance` where attendance.class_id=' . $class_id . ' and attendance.section_id=' . $section_id . ' and timestamp=' . $timestamp . '  and  attendance.year="' . $running_year . '"group by attendance.period,attendance.student_id order by attendance.student_id,attendance.period) atten INNER join student on atten.ids=student.student_id ORDER by name,period';
             $q = $this->db->query($sql);
             if ($q->num_rows() > 0) {
                 foreach (($q->result()) as $row) {
@@ -48,7 +48,7 @@
             }
 
             // get all enrolled student  - codelover138@gmail.com
-            $sql_enroll = 'SELECT * FROM enroll inner join student on enroll.student_id=student.student_id where enroll.class_id=' . $class_id . ' and enroll.section_id=' . $section_id . ' and year="' . $running_year . '" order by enroll.student_id';
+            $sql_enroll = 'SELECT * FROM enroll inner join student on enroll.student_id=student.student_id where enroll.class_id=' . $class_id . ' and enroll.section_id=' . $section_id . ' and year="' . $running_year . '" order by student.name';
             $student_data = array();
             $q = $this->db->query($sql_enroll);
             if ($q->num_rows() > 0) {
@@ -90,12 +90,6 @@
 
             </tbody>
         </table>
-<!--        <center>-->
-<!--            <a href="--><?php //echo site_url('teacher/attendance_report_print_view/' . $class_id . '/' . $section_id . '/' . $timestamp); ?><!--"-->
-<!--               class="btn btn-primary" target="_blank">-->
-<!--                --><?php //echo get_phrase('print_attendance_sheet'); ?>
-<!--            </a>-->
-<!--        </center>-->
     </div>
 </div>
 
