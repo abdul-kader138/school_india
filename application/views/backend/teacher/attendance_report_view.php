@@ -39,7 +39,7 @@
 
             $data = array();
             // get all enrolled student  - codelover138@gmail.com
-            $sql = 'select ids,period,status, classes, dates  from (SELECT student_id as ids,period,status, class_id as classes,from_unixtime(timestamp,"%Y-%m-%d") as dates, timestamp as times FROM `attendance` where attendance.class_id=' . $class_id . ' and attendance.section_id=' . $section_id . ' and timestamp=' . $timestamp . '  and  attendance.year="' . $running_year . '"group by attendance.period,attendance.student_id order by attendance.student_id,attendance.period) atten INNER join student on atten.ids=student.student_id ORDER by name,period';
+            $sql = 'select ids,period,status, classes, dates  from (SELECT student_id as ids,period,status, class_id as classes,(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d")) as dates, timestamp as times FROM `attendance` where attendance.class_id=' . $class_id . ' and attendance.section_id=' . $section_id . ' and timestamp=' . $timestamp . '  and  attendance.year="' . $running_year . '"group by attendance.period,attendance.student_id order by attendance.student_id,attendance.period) atten INNER join student on atten.ids=student.student_id ORDER by name,period';
             $q = $this->db->query($sql);
             if ($q->num_rows() > 0) {
                 foreach (($q->result()) as $row) {

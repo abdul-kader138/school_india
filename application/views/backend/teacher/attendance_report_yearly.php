@@ -34,7 +34,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-2">
+    <div class="col-md-2" style="display:none;">
          <div class="form-group">
             <label class="control-label" style="margin-bottom: 5px;"><?php echo get_phrase('month'); ?></label>
             <select name="month" class="form-control selectboxit">
