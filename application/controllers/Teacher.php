@@ -1187,7 +1187,7 @@ class Teacher extends CI_Controller
 //- codelover138@gmail.com
     public function getPresentHistory($attendences_details, $counter, $student_id)
     {
-        $present = "0";
+        $present = 0;
         foreach ($attendences_details as $info) {
             if ($info->ids == $student_id && $info->day == $counter) {
                 $present = $info->present;

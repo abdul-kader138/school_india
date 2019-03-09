@@ -37,10 +37,7 @@
 
             <tbody>
             <?php
-            $data = array();
-
-            // get all attendence Data - codelover138@gmail.com
-            $sql = 'select ids, present,name,day,dates,month from (SELECT count(attendance_id) as present,from_unixtime(timestamp,"%Y-%m-%d") dates,DAY(FROM_UNIXTIME(timestamp)) as day,MONTH(FROM_UNIXTIME(timestamp)) as month,student_id as ids  FROM `attendance` where status=1 and MONTH(FROM_UNIXTIME(timestamp))=' . $month . ' and section_id=' . $section_id . '  and attendance.class_id=' . $class_id . ' and  Year(FROM_UNIXTIME(timestamp))="' . $sessional_year . '" group by from_unixtime(timestamp,"%Y-%m-%d"), student_id order by student_id,from_unixtime(timestamp,"%Y-%m-%d")) as atten INNER join student on atten.ids=student.student_id ORDER by name,dates';
+            $sql = 'select ids, present,name,day,dates,month from (SELECT count(attendance_id) as present,(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d")) dates,DAY(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d")) as day,MONTH(FROM_UNIXTIME(timestamp)) as month,student_id as ids  FROM `attendance` where status=1 and MONTH(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d"))=' . $month . ' and section_id=' . $section_id . '  and attendance.class_id=' . $class_id . ' and  Year(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d"))="' . $sessional_year . '" group by (DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d")), student_id order by student_id,(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d"))) as atten INNER join student on atten.ids=student.student_id ORDER by name,dates';
             $data = array();
             $q = $this->db->query($sql);
             if ($q->num_rows() > 0) {
