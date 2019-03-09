@@ -143,16 +143,15 @@ $system_name = $this->db->get_where('settings', array('type' => 'system_name'))-
      aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <!-- Modal Header -->
             <div class="modal-header">
                 <button type="button" class="close"
                         data-dismiss="modal">
                     <span aria-hidden="true">&times;</span>
                     <span class="sr-only">Close</span>
                 </button>
-                <h4 class="modal-title" id="myModalLabel">
+                <h2 class="modal-title" style="text-align: center" id="myModalLabel">
                     OTP Login
-                </h4>
+                </h2>
             </div>
             <!-- Modal Body -->
             <div class="modal-body">
@@ -162,25 +161,23 @@ $system_name = $this->db->get_where('settings', array('type' => 'system_name'))-
                         <input type="phone" class="form-control"
                                id="phone" required placeholder="Enter Mobile"/>
                     </div>
-                    <div class="form-group" style="display: none">
-                        <label for="exampleInputPassword1">Password</label>
-                        <input type="password" class="form-control"
-                               id="exampleInputPassword1" placeholder="Password"/>
+                    <div class="form-group" id="otp" style="display: none;">
+                        <label for="exampleInputPassword1">OTP</label>
+                        <input type="otp" class="form-control"
+                               id="otp" placeholder="OTP"/>
+                    </div>
+                    <div class="form-group" style="cursor: pointer" id="send_otp">
+                        <span><i class="fa fa-mail-forward"></i> &nbsp;Send OTP</span>
+                    </div>
+                    <div style="cursor: pointer;display: none" id="resend_otp">
+                        <span><i class="fa fa-refresh"></i> &nbsp;Resend OTP</span>
                     </div>
                 </form>
             </div>
 
             <!-- Modal Footer -->
             <div class="modal-footer">
-                <button type="button" id="send_otp" class="btn btn-primary">
-                    Send OTP
-                </button>
-                <div class="clearfix"></div>
-                <button type="button" class="btn btn-primary">
-                    Resend OTP
-                </button>
-                <div class="clearfix"></div>
-                <button type="button" class="btn btn-primary">
+                <button type="button" id="login_with_otp" class="btn btn-primary">
                     Login
                 </button>
             </div>
@@ -210,12 +207,13 @@ $system_name = $this->db->get_where('settings', array('type' => 'system_name'))-
 <script type="application/javascript">
     $(document).ready(function () {
         $('#otp_login').click(function (event) {
-            $('#myModal').modal('show')
+            $('#myModal').modal('show');
         });
-        $('#myModal').modal({
-            backdrop: 'static',
-            keyboard: false
-        })
+
+        // $('#myModal').modal({
+        //     backdrop: 'static',
+        //     keyboard: false
+        // });
 
         $('#send_otp').click(function () {
             var mobile = $('#phone').val();
@@ -230,15 +228,52 @@ $system_name = $this->db->get_where('settings', array('type' => 'system_name'))-
                             message: res.message
                         }, {
                             type: 'danger',
-                            z_index: 2000,
+                            z_index: 1800
+                        });
+                    }
+                    if (res.type == 'success') {
+                        $('#send_otp').hide();
+                        $('#resend_otp').show();
+                        $('#otp').show();
+                        $.notify({
+                            message: 'OTP sent to your mobile, please check and try to login with this.This OTP will be valid for next 60 sec.'
+                        }, {
+                            type: 'success',
+                            z_index: 1800
+                        });
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus, errorThrown);
+
+                }
+            });
+        });
+
+        $('#login_with_otp').click(function () {
+            var mobile = $('#phone').val();
+            var otp = $('#otp').val();
+            $.ajax({
+                url: '<?php echo site_url('teacher/login_with_otp'); ?>',
+                type: "post",
+                data: {mobile: mobile, otp: otp},
+                success: function (response) {
+                    var res = JSON.parse(response);
+                    console.log(res);
+                    if (res.type == 'error') {
+                        $.notify({
+                            message: res.message
+                        }, {
+                            type: 'danger',
+                            z_index: 3000
                         });
                     }
                     if (res.type == 'success') {
                         $.notify({
                             message: res.message
                         }, {
-                            type: 'OTP sent to your mobile, please check and try to login with this',
-                            z_index: 2000,
+                            type: 'success',
+                            z_index: 3000
                         });
                     }
                 },
