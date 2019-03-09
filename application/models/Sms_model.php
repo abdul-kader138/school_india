@@ -218,4 +218,50 @@ class Sms_model extends CI_Model {
 
         curl_close($ch);
     }
+
+    public function send_otp($mobile_no=""){
+
+        $authKey = "241180AHm3MP4Jt8Of5bb70449";
+
+        $admin_mobile = '8769323385';
+
+
+        //Sender ID,While using route4 sender id should be 6 characters long.
+        $senderId = "XMSERP";
+
+        //Your message to send, Add URL encoding here.
+//        $message = 'Dear '.$teachername.', Attendance has been updated successfully for the Class '.$classname.' Section '.$sectionname.', Period '.$period.' and Subject: '.$subjectname.'. Updation Time: '.$currentdate.'.';
+
+        //Define route
+//        $route = "4";
+        //Prepare you post parameters
+        $curl = curl_init();
+
+        $url='http://control.msg91.com/api/sendotp.php?authkey=241180AHm3MP4Jt8Of5bb70449&message=##OTP##&sender=XMSERP&mobile=8769323385&otp_expiry=3';
+        $urlS="http://control.msg91.com/api/sendotp.php?otp_length=6&authkey=241180AHm3MP4Jt8Of5bb70449&message=##OTP##&sender=XMSERP&mobile=8769323385&otp_expiry=3";
+        curl_setopt_array($curl, array(
+//            CURLOPT_URL => "http://control.msg91.com/api/sendotp.php?otp_length=6&authkey=".$authKey."&message=##OTP##&sender=".$senderId."&mobile="."+91".$admin_mobile."&otp_expiry=3",
+            CURLOPT_URL => "http://control.msg91.com/api/sendotp.php?otp_length=6&authkey=241180AHm3MP4Jt8Of5bb70449&message=##OTP##&sender=XMSERP&mobile=8769323385&otp_expiry=3",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_POSTFIELDS => "",
+            CURLOPT_SSL_VERIFYHOST => 0,
+            CURLOPT_SSL_VERIFYPEER => 0,
+        ));
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+
+        curl_close($curl);
+
+        if ($err) {
+            return "cURL Error #:" . $err;
+        } else {
+            return $response;
+        }
+    }
 }

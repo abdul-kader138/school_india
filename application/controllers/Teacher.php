@@ -1267,4 +1267,9 @@ class Teacher extends CI_Controller
         }
         return $month;
     }
+
+    public function send_otp($mobile_no){
+        echo json_encode($this->sms_model->send_otp($mobile_no));
+
+    }
 }
