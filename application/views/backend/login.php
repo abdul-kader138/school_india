@@ -54,9 +54,7 @@ $system_name = $this->db->get_where('settings', array('type' => 'system_name'))-
                 <a href="<?php echo site_url('login/forgot_password'); ?>" class="link">
                     <?php echo get_phrase('forgot_your_password'); ?> ?
                 </a>
-                <a href="#" class="link" id="otp_login">
-                    <i class="fa fa-lock"></i> <?php echo get_phrase('Login with OTP'); ?>
-                </a>
+                <a href="<?php echo site_url('login/otp_login'); ?>" class="link"><i class="glyphicon glyphicon-phone"></i><?php echo get_phrase('OTP_Login');?></a>
             </div>
         </div>
     </div>
@@ -138,53 +136,6 @@ $system_name = $this->db->get_where('settings', array('type' => 'system_name'))-
     Launch Normal Form
 </button>
 
-<!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
-     aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close"
-                        data-dismiss="modal">
-                    <span aria-hidden="true">&times;</span>
-                    <span class="sr-only">Close</span>
-                </button>
-                <h2 class="modal-title" style="text-align: center" id="myModalLabel">
-                    OTP Login
-                </h2>
-            </div>
-            <!-- Modal Body -->
-            <div class="modal-body">
-                <form role="form">
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">Mobile No</label>
-                        <input type="phone" class="form-control"
-                               id="phone" required placeholder="Enter Mobile"/>
-                    </div>
-                    <div class="form-group" id="otp" style="display: none;">
-                        <label for="exampleInputPassword1">OTP</label>
-                        <input type="otp" class="form-control"
-                               id="otp" placeholder="OTP"/>
-                    </div>
-                    <div class="form-group" style="cursor: pointer" id="send_otp">
-                        <span><i class="fa fa-mail-forward"></i> &nbsp;Send OTP</span>
-                    </div>
-                    <div style="cursor: pointer;display: none" id="resend_otp">
-                        <span><i class="fa fa-refresh"></i> &nbsp;Resend OTP</span>
-                    </div>
-                </form>
-            </div>
-
-            <!-- Modal Footer -->
-            <div class="modal-footer">
-                <button type="button" id="login_with_otp" class="btn btn-primary">
-                    Login
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
 
 <script src="<?php echo base_url('assets/login_page/js/vendor/jquery-1.12.0.min.js'); ?>"></script>
 <script src="<?php echo base_url('assets/login_page/js/vendor/bootstrap.js'); ?>"></script>
@@ -203,87 +154,5 @@ $system_name = $this->db->get_where('settings', array('type' => 'system_name'))-
         });
     </script>
 <?php } ?>
-
-<script type="application/javascript">
-    $(document).ready(function () {
-        $('#otp_login').click(function (event) {
-            $('#myModal').modal('show');
-        });
-
-        // $('#myModal').modal({
-        //     backdrop: 'static',
-        //     keyboard: false
-        // });
-
-        $('#send_otp').click(function () {
-            var mobile = $('#phone').val();
-            $.ajax({
-                type: "get", async: false,
-                url: '<?php echo site_url('teacher/send_otp/'); ?>' + mobile,
-                dataType: "json",
-                success: function (response) {
-                    var res = JSON.parse(response);
-                    if (res.type == 'error') {
-                        $.notify({
-                            message: res.message
-                        }, {
-                            type: 'danger',
-                            z_index: 1800
-                        });
-                    }
-                    if (res.type == 'success') {
-                        $('#send_otp').hide();
-                        $('#resend_otp').show();
-                        $('#otp').show();
-                        $.notify({
-                            message: 'OTP sent to your mobile, please check and try to login with this.This OTP will be valid for next 60 sec.'
-                        }, {
-                            type: 'success',
-                            z_index: 1800
-                        });
-                    }
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    console.log(textStatus, errorThrown);
-
-                }
-            });
-        });
-
-        $('#login_with_otp').click(function () {
-            var mobile = $('#phone').val();
-            var otp = $('#otp').val();
-            $.ajax({
-                url: '<?php echo site_url('teacher/login_with_otp'); ?>',
-                type: "post",
-                data: {mobile: mobile, otp: otp},
-                success: function (response) {
-                    var res = JSON.parse(response);
-                    console.log(res);
-                    if (res.type == 'error') {
-                        $.notify({
-                            message: res.message
-                        }, {
-                            type: 'danger',
-                            z_index: 3000
-                        });
-                    }
-                    if (res.type == 'success') {
-                        $.notify({
-                            message: res.message
-                        }, {
-                            type: 'success',
-                            z_index: 3000
-                        });
-                    }
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    console.log(textStatus, errorThrown);
-
-                }
-            });
-        });
-    });
-</script>
 </body>
 </html>

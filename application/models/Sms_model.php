@@ -222,12 +222,10 @@ class Sms_model extends CI_Model {
     public function send_otp($mobile_no=""){
         $authKey = "241180AHm3MP4Jt8Of5bb70449";
         $admin_mobile = $mobile_no;
-//        $admin_mobile = '+8801781870371';
-        //Sender ID,While using route4 sender id should be 6 characters long.
         $senderId = "XMSERP";
         $curl = curl_init();
         curl_setopt_array($curl, array(
-            CURLOPT_URL => "http://api.msg91.com/api/sendotp.php?authkey=".$authKey."&mobile=".$admin_mobile."&message=##OTP##"."&sender=".$senderId."&otp_expiry=1&otp_length=6&otp=313136",
+            CURLOPT_URL => "http://api.msg91.com/api/sendotp.php?authkey=".$authKey."&mobile=".$admin_mobile."&message=##OTP##"."&sender=".$senderId."&otp_expiry=1&otp_length=6",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
@@ -267,13 +265,44 @@ class Sms_model extends CI_Model {
             CURLOPT_POSTFIELDS => "",
             CURLOPT_SSL_VERIFYHOST => 0,
             CURLOPT_SSL_VERIFYPEER => 0,
+            CURLOPT_HTTPHEADER => array(
+                "content-type: application/x-www-form-urlencoded"
+            ),
         ));
 
         $response = curl_exec($curl);
         $err = curl_error($curl);
-
         curl_close($curl);
+        if ($err) {
+            return "cURL Error #:" . $err;
+        } else {
+            return $response;
+        }
+    }
 
+    public function resend_otp($mobile_no=""){
+        $authKey = "241180AHm3MP4Jt8Of5bb70449";
+        $admin_mobile = $mobile_no;
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => "http://control.msg91.com/api/retryotp.php?authkey=".$authKey."&mobile=".$admin_mobile."&retrytype=text",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_POSTFIELDS => "",
+            CURLOPT_SSL_VERIFYHOST => 0,
+            CURLOPT_SSL_VERIFYPEER => 0,
+            CURLOPT_HTTPHEADER => array(
+                "content-type: application/x-www-form-urlencoded"
+            ),
+        ));
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+        curl_close($curl);
         if ($err) {
             return "cURL Error #:" . $err;
         } else {
