@@ -1,23 +1,4 @@
 <hr />
-
-
-
-<?php
-$str = "$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-$last = explode("/",$str,10);// so at second index rest of the string will come.
-$subject_id = $last[7];
-$teacher_id = $last[8];
-$period = $last[9];
-
-//echo "Subject ID:";
-//echo $subject_id;
-//echo "<br>Teacher ID:";
-//echo $teacher_id;
-//echo "<br>Period:";
-//echo $period;
-
-?>
-
 <div class="row" style="text-align: center;">
     <div class="col-sm-4"></div>
     <div class="col-sm-4">
@@ -42,13 +23,9 @@ $period = $last[9];
 														echo $name;
 													?>
             </h4>
-            
-            
             <h4 style="color: #696969;"><b>Date: </b>
                 <?php echo date("d M Y", $timestamp); ?>
             </h4>
-            
-            
             <h4 style="color: #696969;">
                 <?php echo get_phrase('<b>Period:</b>'); ?> <?php echo $period; ?>
             </h4>
@@ -75,12 +52,6 @@ $period = $last[9];
 
         <?php echo form_open(site_url('teacher/attendance_update/'. $class_id . '/' . $section_id . '/' . $timestamp . '/' . $subject_id . '/' . $teacher_id . '/' . $period)); ?>
         <div id="attendance_update">
-            
-            <?php 
-         
-            
-           
-            ?>
             <table class="table table-bordered">
                 <thead>
                     <tr>
@@ -103,8 +74,6 @@ $period = $last[9];
                                 'year' => $running_year,
                                 'timestamp' => $timestamp
                             ))->result_array();
-
-
                     foreach ($attendance_of_students as $row):
                         ?>
                         <tr>
@@ -127,7 +96,6 @@ $period = $last[9];
                 </tbody>
             </table>
         </div>
-
         <center>
             <button type="submit" class="btn btn-success" id="submit_button">
                 <i class="entypo-thumbs-up"></i> <?php echo get_phrase('save_changes'); ?>

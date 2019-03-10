@@ -31,7 +31,7 @@ $system_name = $this->db->get_where('settings', array('type' => 'system_name'))-
             <a href="<?php echo site_url('login'); ?>" class="logo">
                 <img src="<?php echo base_url('assets/login_page/img/logo.png'); ?>" height="60" alt="">
             </a>
-            <h2 class="title"><?php echo $system_name; ?></h2>
+<!--            <h2 class="title">--><?php //echo $system_name; ?><!--</h2>-->
         </div>
         <div class="login-content">
             <form method="post" role="form" id="form_login"

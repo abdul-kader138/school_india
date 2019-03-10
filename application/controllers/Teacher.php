@@ -462,7 +462,7 @@ class Teacher extends CI_Controller
         $this->load->view('backend/index', $page_data);
     }
 
-    function manage_attendance_view($class_id = '', $section_id = '', $timestamp = '')
+    function manage_attendance_view($class_id = '', $section_id = '', $timestamp = '',$subject_id='',$other='',$period='')
     {
         if ($this->session->userdata('teacher_login') != 1)
             redirect(site_url('login'), 'refresh');
@@ -471,6 +471,8 @@ class Teacher extends CI_Controller
             'class_id' => $class_id
         ))->row()->name;
         $page_data['class_id'] = $class_id;
+        $page_data['subject_id'] = $subject_id;
+        $page_data['period'] = $period;
         $page_data['timestamp'] = $timestamp;
         $page_data['page_name'] = 'manage_attendance_view';
         $section_name = $this->db->get_where('section', array(
