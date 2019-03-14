@@ -222,10 +222,10 @@ class Sms_model extends CI_Model {
     public function send_otp($mobile_no=""){
         $authKey = "241180AHm3MP4Jt8Of5bb70449";
         $admin_mobile = $mobile_no;
-        $senderId = "XMSERP";
+        $senderIds = "XMSERP";
         $curl = curl_init();
         curl_setopt_array($curl, array(
-            CURLOPT_URL => "http://api.msg91.com/api/sendotp.php?authkey=".$authKey."&mobile=".$admin_mobile."&message=##OTP##"."&sender=".$senderId."&otp_expiry=1&otp_length=6",
+            CURLOPT_URL => "http://api.msg91.com/api/sendotp.php?authkey=".$authKey."&mobile=".$admin_mobile."&message=##OTP##"."&sender=".$senderIds."&otp_expiry=1&otp_length=6",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,

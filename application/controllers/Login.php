@@ -253,9 +253,10 @@ class Login extends CI_Controller
             $info_decode = json_decode($info);
             if ($info_decode && $info_decode->type === 'success') {
                 $this->session->set_userdata('teacher_login', '1');
-                $this->session->set_userdata('teacher_id', $query->teacher_id);
-                $this->session->set_userdata('login_user_id', $query->teacher_id);
-                $this->session->set_userdata('name', $query->name);
+                $row = $query->row();
+                $this->session->set_userdata('teacher_id', $row->teacher_id);
+                $this->session->set_userdata('login_user_id', $row->teacher_id);
+                $this->session->set_userdata('name', $row->name);
                 $this->session->set_userdata('login_type', 'teacher');
                 redirect(site_url('teacher/dashboard'), 'refresh');
 
@@ -269,7 +270,7 @@ class Login extends CI_Controller
         }
     }
 
-    public function send_otp($mobile_no="")
+    public function send_otp($mobile_no = "")
     {
         if (!$this->input->is_ajax_request()) {
             $obj = array(
@@ -294,7 +295,7 @@ class Login extends CI_Controller
         }
     }
 
-    public function resend_otp($mobile_no="")
+    public function resend_otp($mobile_no = "")
     {
         if (!$this->input->is_ajax_request()) {
             $obj = array(
