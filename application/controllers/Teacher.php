@@ -462,7 +462,7 @@ class Teacher extends CI_Controller
         $this->load->view('backend/index', $page_data);
     }
 
-    function manage_attendance_view($class_id = '', $section_id = '', $timestamp = '',$subject_id='',$teacher_id='',$period='')
+    function manage_attendance_view($class_id = '', $section_id = '', $timestamp = '', $subject_id = '', $teacher_id = '', $period = '')
     {
         if ($this->session->userdata('teacher_login') != 1)
             redirect(site_url('login'), 'refresh');
@@ -764,6 +764,49 @@ class Teacher extends CI_Controller
         $page_data['sessional_year'] = $sessional_year;
         $this->load->view('backend/teacher/attendance_report_print_view_subject', $page_data);
     }
+
+
+
+    //a.kader
+    ///////ATTENDANCE REPORT Subject Wise/////
+    function attendance_report_subject_yearly()
+    {
+        $page_data['month'] = date('m');
+        $page_data['page_name'] = 'attendance_report_subject_yearly';
+        $page_data['page_title'] = get_phrase('attendance_report_subject_yearly');
+        $this->load->view('backend/index', $page_data);
+    }
+
+    function attendance_report_selector_subject_yearly()
+    {
+        if ($this->input->post('class_id') == '' || $this->input->post('sessional_year') == '') {
+            $this->session->set_flashdata('error_message', get_phrase('please_make_sure_class_and_sessional_year_are_selected'));
+            redirect(site_url('teacher/attendance_report_subject_yearly'), 'refresh');
+        }
+        $data['class_id'] = $this->input->post('class_id');
+        $data['section_id'] = $this->input->post('section_id');
+        $data['month'] = $this->input->post('month');
+        $data['subject_id'] = $this->input->post('subject_id');
+        $data['sessional_year'] = $this->input->post('sessional_year');
+        redirect(site_url('teacher/attendance_report_view_subject_yearly/' . $data['class_id'] . '/' . $data['section_id'] . '/' . $data['month'] . '/' . $data['sessional_year'] . '/' . $data['subject_id']), 'refresh');
+    }
+
+    function attendance_report_view_subject_yearly($class_id = '', $section_id = '', $sessional_year = '', $subject_id = '')
+    {
+        if ($this->session->userdata('teacher_login') != 1)
+            redirect(base_url(), 'refresh');
+        $page_data['class_id'] = $class_id;
+        $page_data['section_id'] = $section_id;
+        $page_data['subject_id'] = $subject_id;
+        $page_data['sessional_year'] = $sessional_year;
+        $page_data['teacher'] = $this;
+        $page_data['page_name'] = 'attendance_report_view_subject_yearly';
+        $page_data['page_title'] = get_phrase('attendance_report_view_subject_yearly');
+        $this->load->view('backend/index', $page_data);
+    }
+
+// End A.Kader
+
 
     function attendance_report_selector_subject()
     {
@@ -1264,11 +1307,136 @@ class Teacher extends CI_Controller
             case "12":
                 $month = "December";
                 break;
+            case "13":
+                $month = "Total";
+                break;
             default:
                 $month = "";
                 break;
         }
         return $month;
+    }
+
+
+    function teacher_actions()
+    {
+        if ($this->session->userdata('teacher_login') != 1)
+            redirect(site_url('login'), 'refresh');
+        if ($this->input->post('form_action') == 'export_excel') {
+            if ($this->input->post('form_action') == 'export_excel') {
+                $class_id = $this->input->post('class_id');
+                $section_id = $this->input->post('section_id');
+                $subject_id = $this->input->post('subject_id');
+                $sessional_year = $this->input->post('sessional_year');
+                $running_year = $this->db->get_where('settings', array('type' => 'running_year'))->row()->description;
+
+                $class_name = $this->db->get_where('class', array('class_id' => $class_id))->row()->name;
+                $section_name = $this->db->get_where('section', array('section_id' => $section_id))->row()->name;
+                $subject_name = $this->db->get_where('subject', array('subject_id' => $subject_id))->row()->name;
+                $name="Attendance_Report_Subject_Wise_Yearly_".$class_name."_".$section_name."_".$subject_name."_".$sessional_year;
+
+                $this->load->library('excel');
+                $this->excel->setActiveSheetIndex(0);
+                $this->excel->getActiveSheet()->setTitle("Subject_Wise_Yearly_Report");
+                $this->excel->getActiveSheet()->SetCellValue('A1', "Name");
+                $this->excel->getActiveSheet()->SetCellValue('B1', $this->getMonthName(1));
+                $this->excel->getActiveSheet()->SetCellValue('C1', $this->getMonthName(2));
+                $this->excel->getActiveSheet()->SetCellValue('D1', $this->getMonthName(3));
+                $this->excel->getActiveSheet()->SetCellValue('E1', $this->getMonthName(4));
+                $this->excel->getActiveSheet()->SetCellValue('F1', $this->getMonthName(5));
+                $this->excel->getActiveSheet()->SetCellValue('G1', $this->getMonthName(6));
+                $this->excel->getActiveSheet()->SetCellValue('H1', $this->getMonthName(7));
+                $this->excel->getActiveSheet()->SetCellValue('I1', $this->getMonthName(8));
+                $this->excel->getActiveSheet()->SetCellValue('J1', $this->getMonthName(9));
+                $this->excel->getActiveSheet()->SetCellValue('K1', $this->getMonthName(10));
+                $this->excel->getActiveSheet()->SetCellValue('L1', $this->getMonthName(11));
+                $this->excel->getActiveSheet()->SetCellValue('M1', $this->getMonthName(12));
+                $this->excel->getActiveSheet()->SetCellValue('N1', $this->getMonthName(13));
+                $data = array();
+                $sql = 'select ids, present,name,day,dates,month from (SELECT count(attendance_id) as present,(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d")) dates,DAY(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d")) as day,month(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d")) as month,student_id as ids  FROM `attendance` where status=1 and Year(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d"))=' . $sessional_year . ' and section_id=' . $section_id . '  and attendance.class_id=' . $class_id . ' and attendance.subject_id=' . $subject_id . '  and  attendance.year="' . $running_year . '" group by month(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d")), student_id order by student_id,(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d"))) as atten INNER join student on atten.ids=student.student_id ORDER by name,dates';
+                $data = array();
+                $q = $this->db->query($sql);
+                if ($q->num_rows() > 0) {
+                    foreach (($q->result()) as $row) {
+                        $data[] = $row;
+                    }
+                }
+
+
+                $sql_enroll = 'SELECT * FROM enroll inner join student on enroll.student_id=student.student_id where enroll.class_id=' . $class_id . ' and enroll.section_id=' . $section_id . ' and year="' . $running_year . '" order by student.name';
+                $student_data = array();
+                $q = $this->db->query($sql_enroll);
+                if ($q->num_rows() > 0) {
+                    foreach (($q->result()) as $row) {
+                        $student_data[] = $row;
+                    }
+                }
+                $rows = 2;
+                foreach ($student_data as $row) {
+                    $this->excel->getActiveSheet()->SetCellValue('A' . $rows, $row->name);
+                    $total = 0;
+                    for ($j = 1; $j <= 12; $j++) {
+                        $present = $this->getYearlyPresentHistory($data, $j, $row->student_id);
+                        $total = $total + $present;
+                        if ($j == 1) {
+                            if ($present != 0) $this->excel->getActiveSheet()->SetCellValue('B' . $rows, $present);
+                            else $this->excel->getActiveSheet()->SetCellValue('B' . $rows, "-");
+                        }
+                        if ($j == 2) {
+                            if ($present != 0) $this->excel->getActiveSheet()->SetCellValue('C' . $rows, $present);
+                            else $this->excel->getActiveSheet()->SetCellValue('C' . $rows, "-");
+                        }
+                        if ($j == 3) {
+                            if ($present != 0) $this->excel->getActiveSheet()->SetCellValue('D' . $rows, $present);
+                            else $this->excel->getActiveSheet()->SetCellValue('D' . $rows, "-");
+                        }
+                        if ($j == 4) {
+                            if ($present != 0) $this->excel->getActiveSheet()->SetCellValue('E' . $rows, $present);
+                            else $this->excel->getActiveSheet()->SetCellValue('E' . $rows, "-");
+                        }
+                        if ($j == 5) {
+                            if ($present != 0) $this->excel->getActiveSheet()->SetCellValue('F' . $rows, $present);
+                            else $this->excel->getActiveSheet()->SetCellValue('F' . $rows, "-");
+                        }
+                        if ($j == 6) {
+                            if ($present != 0) $this->excel->getActiveSheet()->SetCellValue('G' . $rows, $present);
+                            else $this->excel->getActiveSheet()->SetCellValue('G' . $rows, "-");
+                        }
+                        if ($j == 7) {
+                            if ($present != 0) $this->excel->getActiveSheet()->SetCellValue('H' . $rows, $present);
+                            else $this->excel->getActiveSheet()->SetCellValue('H' . $rows, "-");
+                        }
+                        if ($j == 8) {
+                            if ($present != 0) $this->excel->getActiveSheet()->SetCellValue('I' . $rows, $present);
+                            else $this->excel->getActiveSheet()->SetCellValue('I' . $rows, "-");
+                        }
+                        if ($j == 9) {
+                            if ($present != 0) $this->excel->getActiveSheet()->SetCellValue('J' . $rows, $present);
+                            else $this->excel->getActiveSheet()->SetCellValue('J' . $rows, "-");
+                        }
+                        if ($j == 10) {
+                            if ($present != 0) $this->excel->getActiveSheet()->SetCellValue('K' . $rows, $present);
+                            else $this->excel->getActiveSheet()->SetCellValue('K' . $rows, "-");;
+                        }
+                        if ($j == 11) {
+                            if ($present != 0) $this->excel->getActiveSheet()->SetCellValue('L' . $rows, $present);
+                            else $this->excel->getActiveSheet()->SetCellValue('L' . $rows, "-");
+                        }
+                        if ($j == 12) {
+                            if ($present != 0) $this->excel->getActiveSheet()->SetCellValue('M' . $rows, $present);
+                            else $this->excel->getActiveSheet()->SetCellValue('M' . $rows, "-");
+                        }
+
+                    }
+                    $this->excel->getActiveSheet()->SetCellValue('N' . $rows, $total);
+                    $rows++;
+                }
+                $this->load->helper('excel');
+                create_excel($this->excel, $name);
+            }
+        } else {
+            redirect(site_url('teacher/dashboard'), 'refresh');
+        }
     }
 
 }

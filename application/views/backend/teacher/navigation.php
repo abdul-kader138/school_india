@@ -94,6 +94,11 @@
                                 <span><i class="entypo-dot"></i><?php echo get_phrase('subject_wise_report'); ?></span>
                             </a>
                         </li>
+                        <li class="<?php if (( $page_name == 'attendance_report_view_yearly' || $page_name == 'attendance_report_view_yearly')) echo 'active'; ?>">
+                            <a href="<?php echo site_url('teacher/attendance_report_subject_yearly'); ?>">
+                                <span><i class="entypo-dot"></i><?php echo get_phrase('Yearly_Subject_Wise_Report'); ?></span>
+                            </a>
+                        </li>
                     
                     </li>
                     </ul>
