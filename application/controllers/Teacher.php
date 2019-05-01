@@ -1409,20 +1409,30 @@ class Teacher extends CI_Controller
                 $spreadsheet = new Spreadsheet();
                 $spreadsheet->setActiveSheetIndex(0);
                 $spreadsheet->getActiveSheet()->setTitle("Subject_Wise_Yearly_Report");
-                $spreadsheet->getActiveSheet()->SetCellValue('A1', "Name");
-                $spreadsheet->getActiveSheet()->SetCellValue('B1', $this->getMonthNameFinancial(1));
-                $spreadsheet->getActiveSheet()->SetCellValue('C1', $this->getMonthNameFinancial(2));
-                $spreadsheet->getActiveSheet()->SetCellValue('D1', $this->getMonthNameFinancial(3));
-                $spreadsheet->getActiveSheet()->SetCellValue('E1', $this->getMonthNameFinancial(4));
-                $spreadsheet->getActiveSheet()->SetCellValue('F1', $this->getMonthNameFinancial(5));
-                $spreadsheet->getActiveSheet()->SetCellValue('G1', $this->getMonthNameFinancial(6));
-                $spreadsheet->getActiveSheet()->SetCellValue('H1', $this->getMonthNameFinancial(7));
-                $spreadsheet->getActiveSheet()->SetCellValue('I1', $this->getMonthNameFinancial(8));
-                $spreadsheet->getActiveSheet()->SetCellValue('J1', $this->getMonthNameFinancial(9));
-                $spreadsheet->getActiveSheet()->SetCellValue('K1', $this->getMonthNameFinancial(10));
-                $spreadsheet->getActiveSheet()->SetCellValue('L1', $this->getMonthNameFinancial(11));
-                $spreadsheet->getActiveSheet()->SetCellValue('M1', $this->getMonthNameFinancial(12));
-                $spreadsheet->getActiveSheet()->SetCellValue('N1', $this->getMonthNameFinancial(13));
+                $spreadsheet->getActiveSheet()->SetCellValue('G1', "St. Xavier's College, Jaipur");
+                $spreadsheet->getActiveSheet()->getStyle('G1')->getFont()->setSize(16);
+                $spreadsheet->getActiveSheet()->SetCellValue('G2', "Year:");
+                $spreadsheet->getActiveSheet()->SetCellValue('H2', $sessional_year);
+                $spreadsheet->getActiveSheet()->SetCellValue('G3', "Class:");
+                $spreadsheet->getActiveSheet()->SetCellValue('H3', $class_name);
+                $spreadsheet->getActiveSheet()->SetCellValue('G4', "Section:");
+                $spreadsheet->getActiveSheet()->SetCellValue('H4', $section_name);
+                $spreadsheet->getActiveSheet()->SetCellValue('G5', "Subject:");
+                $spreadsheet->getActiveSheet()->SetCellValue('H5', $subject_name);
+                $spreadsheet->getActiveSheet()->SetCellValue('A7', "Name");
+                $spreadsheet->getActiveSheet()->SetCellValue('B7', $this->getMonthNameFinancial(1));
+                $spreadsheet->getActiveSheet()->SetCellValue('C7', $this->getMonthNameFinancial(2));
+                $spreadsheet->getActiveSheet()->SetCellValue('D7', $this->getMonthNameFinancial(3));
+                $spreadsheet->getActiveSheet()->SetCellValue('E7', $this->getMonthNameFinancial(4));
+                $spreadsheet->getActiveSheet()->SetCellValue('F7', $this->getMonthNameFinancial(5));
+                $spreadsheet->getActiveSheet()->SetCellValue('G7', $this->getMonthNameFinancial(6));
+                $spreadsheet->getActiveSheet()->SetCellValue('H7', $this->getMonthNameFinancial(7));
+                $spreadsheet->getActiveSheet()->SetCellValue('I7', $this->getMonthNameFinancial(8));
+                $spreadsheet->getActiveSheet()->SetCellValue('J7', $this->getMonthNameFinancial(9));
+                $spreadsheet->getActiveSheet()->SetCellValue('K7', $this->getMonthNameFinancial(10));
+                $spreadsheet->getActiveSheet()->SetCellValue('L7', $this->getMonthNameFinancial(11));
+                $spreadsheet->getActiveSheet()->SetCellValue('M7', $this->getMonthNameFinancial(12));
+                $spreadsheet->getActiveSheet()->SetCellValue('N7', $this->getMonthNameFinancial(13));
 
 
                 $data = array();
@@ -1444,7 +1454,7 @@ class Teacher extends CI_Controller
                         $student_data[] = $row;
                     }
                 }
-                $rows = 2;
+                $rows = 8;
                 foreach ($student_data as $row) {
                     $spreadsheet->getActiveSheet()->SetCellValue('A' . $rows, $row->name);
                     $total = 0;
