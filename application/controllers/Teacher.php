@@ -1267,6 +1267,19 @@ class Teacher extends CI_Controller
         return $present;
     }
 
+    public function getYearlyPresentSubject($attendences_details, $counter, $student_id)
+    {
+        $present = "0";
+        foreach ($attendences_details as $info) {
+            $ids=$this->getMonthIDFinancial($info->month);
+            if ($info->ids == $student_id && $ids == $counter) {
+                $present = $info->present;
+                break;
+            }
+        }
+        return $present;
+    }
+
     public function getMonthName($val)
     {
         $month = "";
@@ -1318,6 +1331,57 @@ class Teacher extends CI_Controller
     }
 
 
+    public function getMonthNameFinancial($val)
+    {
+        $month = "";
+        switch ($val) {
+            case "7":
+                $month = "January";
+                break;
+            case "8":
+                $month = "February";
+                break;
+            case "9":
+                $month = "March";
+                break;
+            case "10":
+                $month = "April";
+                break;
+            case "11":
+                $month = "May";
+                break;
+            case "12":
+                $month = "June";
+                break;
+            case "1":
+                $month = "July";
+                break;
+            case "2":
+                $month = "August";
+                break;
+            case "3":
+                $month = "September";
+                break;
+            case "4":
+                $month = "October";
+                break;
+            case "5":
+                $month = "November";
+                break;
+            case "6":
+                $month = "December";
+                break;
+            case "13":
+                $month = "Total";
+                break;
+            default:
+                $month = "";
+                break;
+        }
+        return $month;
+    }
+
+
     function teacher_actions()
     {
         if ($this->session->userdata('teacher_login') != 1)
@@ -1334,26 +1398,30 @@ class Teacher extends CI_Controller
                 $section_name = $this->db->get_where('section', array('section_id' => $section_id))->row()->name;
                 $subject_name = $this->db->get_where('subject', array('subject_id' => $subject_id))->row()->name;
                 $name="Attendance_Report_Subject_Wise_Yearly_".$class_name."_".$section_name."_".$subject_name."_".$sessional_year;
+                $start_date="'".$sessional_year.'-07-31'."'";
+                $end_year=$sessional_year+1;
+                $end_date="'".$end_year.'-06-30'."'";
+
 
                 $this->load->library('excel');
                 $this->excel->setActiveSheetIndex(0);
                 $this->excel->getActiveSheet()->setTitle("Subject_Wise_Yearly_Report");
                 $this->excel->getActiveSheet()->SetCellValue('A1', "Name");
-                $this->excel->getActiveSheet()->SetCellValue('B1', $this->getMonthName(1));
-                $this->excel->getActiveSheet()->SetCellValue('C1', $this->getMonthName(2));
-                $this->excel->getActiveSheet()->SetCellValue('D1', $this->getMonthName(3));
-                $this->excel->getActiveSheet()->SetCellValue('E1', $this->getMonthName(4));
-                $this->excel->getActiveSheet()->SetCellValue('F1', $this->getMonthName(5));
-                $this->excel->getActiveSheet()->SetCellValue('G1', $this->getMonthName(6));
-                $this->excel->getActiveSheet()->SetCellValue('H1', $this->getMonthName(7));
-                $this->excel->getActiveSheet()->SetCellValue('I1', $this->getMonthName(8));
-                $this->excel->getActiveSheet()->SetCellValue('J1', $this->getMonthName(9));
-                $this->excel->getActiveSheet()->SetCellValue('K1', $this->getMonthName(10));
-                $this->excel->getActiveSheet()->SetCellValue('L1', $this->getMonthName(11));
-                $this->excel->getActiveSheet()->SetCellValue('M1', $this->getMonthName(12));
-                $this->excel->getActiveSheet()->SetCellValue('N1', $this->getMonthName(13));
+                $this->excel->getActiveSheet()->SetCellValue('B1', $this->getMonthNameFinancial(1));
+                $this->excel->getActiveSheet()->SetCellValue('C1', $this->getMonthNameFinancial(2));
+                $this->excel->getActiveSheet()->SetCellValue('D1', $this->getMonthNameFinancial(3));
+                $this->excel->getActiveSheet()->SetCellValue('E1', $this->getMonthNameFinancial(4));
+                $this->excel->getActiveSheet()->SetCellValue('F1', $this->getMonthNameFinancial(5));
+                $this->excel->getActiveSheet()->SetCellValue('G1', $this->getMonthNameFinancial(6));
+                $this->excel->getActiveSheet()->SetCellValue('H1', $this->getMonthNameFinancial(7));
+                $this->excel->getActiveSheet()->SetCellValue('I1', $this->getMonthNameFinancial(8));
+                $this->excel->getActiveSheet()->SetCellValue('J1', $this->getMonthNameFinancial(9));
+                $this->excel->getActiveSheet()->SetCellValue('K1', $this->getMonthNameFinancial(10));
+                $this->excel->getActiveSheet()->SetCellValue('L1', $this->getMonthNameFinancial(11));
+                $this->excel->getActiveSheet()->SetCellValue('M1', $this->getMonthNameFinancial(12));
+                $this->excel->getActiveSheet()->SetCellValue('N1', $this->getMonthNameFinancial(13));
                 $data = array();
-                $sql = 'select ids, present,name,day,dates,month from (SELECT count(attendance_id) as present,(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d")) dates,DAY(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d")) as day,month(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d")) as month,student_id as ids  FROM `attendance` where status=1 and Year(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d"))=' . $sessional_year . ' and section_id=' . $section_id . '  and attendance.class_id=' . $class_id . ' and attendance.subject_id=' . $subject_id . '  and  attendance.year="' . $running_year . '" group by month(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d")), student_id order by student_id,(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d"))) as atten INNER join student on atten.ids=student.student_id ORDER by name,dates';
+                $sql = 'select ids, present,name,day,dates,month from (SELECT count(attendance_id) as present,(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d")) dates,DAY(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d")) as day,month(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d")) as month,student_id as ids  FROM `attendance` where status=1 and  section_id=' . $section_id . '  and attendance.class_id=' . $class_id . ' and attendance.subject_id=' . $subject_id . '  and  DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d") between ' . $start_date . ' and  ' . $end_date . 'group by month(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d")), student_id order by student_id,(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d"))) as atten INNER join student on atten.ids=student.student_id ORDER by name,dates';
                 $data = array();
                 $q = $this->db->query($sql);
                 if ($q->num_rows() > 0) {
@@ -1376,7 +1444,7 @@ class Teacher extends CI_Controller
                     $this->excel->getActiveSheet()->SetCellValue('A' . $rows, $row->name);
                     $total = 0;
                     for ($j = 1; $j <= 12; $j++) {
-                        $present = $this->getYearlyPresentHistory($data, $j, $row->student_id);
+                        $present = $this->getYearlyPresentSubject($data, $j, $row->student_id);
                         $total = $total + $present;
                         if ($j == 1) {
                             if ($present != 0) $this->excel->getActiveSheet()->SetCellValue('B' . $rows, $present);
@@ -1437,6 +1505,54 @@ class Teacher extends CI_Controller
         } else {
             redirect(site_url('teacher/dashboard'), 'refresh');
         }
+    }
+
+
+    public function getMonthIDFinancial($val)
+    {
+        $month = 0;
+        switch ($val) {
+            case 7:
+                $month = 1;
+                break;
+            case 8:
+                $month = 2;
+                break;
+            case 9:
+                $month = 3;
+                break;
+            case 10:
+                $month = 4;
+                break;
+            case 11:
+                $month = 5;
+                break;
+            case 12:
+                $month = 6;
+                break;
+            case 1:
+                $month = 7;
+                break;
+            case 2:
+                $month = 8;
+                break;
+            case 3:
+                $month = 9;
+                break;
+            case 4:
+                $month = 10;
+                break;
+            case 5:
+                $month = 11;
+                break;
+            case 6:
+                $month = 12;
+                break;
+             default:
+                $month = 0;
+                break;
+        }
+        return $month;
     }
 
 }
