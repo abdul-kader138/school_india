@@ -10,6 +10,10 @@ if (!defined('BASEPATH'))
  *  http://support.creativeitem.com
  */
 
+require 'vendor/autoload.php';
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 class Teacher extends CI_Controller
 {
     function __construct()
@@ -788,7 +792,7 @@ class Teacher extends CI_Controller
         $data['month'] = $this->input->post('month');
         $data['subject_id'] = $this->input->post('subject_id');
         $data['sessional_year'] = $this->input->post('sessional_year');
-        redirect(site_url('teacher/attendance_report_view_subject_yearly/' . $data['class_id'] . '/' . $data['section_id'] . '/' . $data['month'] . '/' . $data['sessional_year'] . '/' . $data['subject_id']), 'refresh');
+        redirect(site_url('teacher/attendance_report_view_subject_yearly/' . $data['class_id'] . '/' . $data['section_id'] . '/' . $data['sessional_year'] . '/' . $data['subject_id']), 'refresh');
     }
 
     function attendance_report_view_subject_yearly($class_id = '', $section_id = '', $sessional_year = '', $subject_id = '')
@@ -1402,24 +1406,25 @@ class Teacher extends CI_Controller
                 $end_year=$sessional_year+1;
                 $end_date="'".$end_year.'-06-30'."'";
 
+                $spreadsheet = new Spreadsheet();
+                $spreadsheet->setActiveSheetIndex(0);
+                $spreadsheet->getActiveSheet()->setTitle("Subject_Wise_Yearly_Report");
+                $spreadsheet->getActiveSheet()->SetCellValue('A1', "Name");
+                $spreadsheet->getActiveSheet()->SetCellValue('B1', $this->getMonthNameFinancial(1));
+                $spreadsheet->getActiveSheet()->SetCellValue('C1', $this->getMonthNameFinancial(2));
+                $spreadsheet->getActiveSheet()->SetCellValue('D1', $this->getMonthNameFinancial(3));
+                $spreadsheet->getActiveSheet()->SetCellValue('E1', $this->getMonthNameFinancial(4));
+                $spreadsheet->getActiveSheet()->SetCellValue('F1', $this->getMonthNameFinancial(5));
+                $spreadsheet->getActiveSheet()->SetCellValue('G1', $this->getMonthNameFinancial(6));
+                $spreadsheet->getActiveSheet()->SetCellValue('H1', $this->getMonthNameFinancial(7));
+                $spreadsheet->getActiveSheet()->SetCellValue('I1', $this->getMonthNameFinancial(8));
+                $spreadsheet->getActiveSheet()->SetCellValue('J1', $this->getMonthNameFinancial(9));
+                $spreadsheet->getActiveSheet()->SetCellValue('K1', $this->getMonthNameFinancial(10));
+                $spreadsheet->getActiveSheet()->SetCellValue('L1', $this->getMonthNameFinancial(11));
+                $spreadsheet->getActiveSheet()->SetCellValue('M1', $this->getMonthNameFinancial(12));
+                $spreadsheet->getActiveSheet()->SetCellValue('N1', $this->getMonthNameFinancial(13));
 
-                $this->load->library('excel');
-                $this->excel->setActiveSheetIndex(0);
-                $this->excel->getActiveSheet()->setTitle("Subject_Wise_Yearly_Report");
-                $this->excel->getActiveSheet()->SetCellValue('A1', "Name");
-                $this->excel->getActiveSheet()->SetCellValue('B1', $this->getMonthNameFinancial(1));
-                $this->excel->getActiveSheet()->SetCellValue('C1', $this->getMonthNameFinancial(2));
-                $this->excel->getActiveSheet()->SetCellValue('D1', $this->getMonthNameFinancial(3));
-                $this->excel->getActiveSheet()->SetCellValue('E1', $this->getMonthNameFinancial(4));
-                $this->excel->getActiveSheet()->SetCellValue('F1', $this->getMonthNameFinancial(5));
-                $this->excel->getActiveSheet()->SetCellValue('G1', $this->getMonthNameFinancial(6));
-                $this->excel->getActiveSheet()->SetCellValue('H1', $this->getMonthNameFinancial(7));
-                $this->excel->getActiveSheet()->SetCellValue('I1', $this->getMonthNameFinancial(8));
-                $this->excel->getActiveSheet()->SetCellValue('J1', $this->getMonthNameFinancial(9));
-                $this->excel->getActiveSheet()->SetCellValue('K1', $this->getMonthNameFinancial(10));
-                $this->excel->getActiveSheet()->SetCellValue('L1', $this->getMonthNameFinancial(11));
-                $this->excel->getActiveSheet()->SetCellValue('M1', $this->getMonthNameFinancial(12));
-                $this->excel->getActiveSheet()->SetCellValue('N1', $this->getMonthNameFinancial(13));
+
                 $data = array();
                 $sql = 'select ids, present,name,day,dates,month from (SELECT count(attendance_id) as present,(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d")) dates,DAY(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d")) as day,month(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d")) as month,student_id as ids  FROM `attendance` where status=1 and  section_id=' . $section_id . '  and attendance.class_id=' . $class_id . ' and attendance.subject_id=' . $subject_id . '  and  DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d") between ' . $start_date . ' and  ' . $end_date . 'group by month(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d")), student_id order by student_id,(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d"))) as atten INNER join student on atten.ids=student.student_id ORDER by name,dates';
                 $data = array();
@@ -1441,66 +1446,78 @@ class Teacher extends CI_Controller
                 }
                 $rows = 2;
                 foreach ($student_data as $row) {
-                    $this->excel->getActiveSheet()->SetCellValue('A' . $rows, $row->name);
+                    $spreadsheet->getActiveSheet()->SetCellValue('A' . $rows, $row->name);
                     $total = 0;
                     for ($j = 1; $j <= 12; $j++) {
                         $present = $this->getYearlyPresentSubject($data, $j, $row->student_id);
                         $total = $total + $present;
                         if ($j == 1) {
-                            if ($present != 0) $this->excel->getActiveSheet()->SetCellValue('B' . $rows, $present);
-                            else $this->excel->getActiveSheet()->SetCellValue('B' . $rows, "-");
+                            if ($present != 0) $spreadsheet->getActiveSheet()->SetCellValue('B' . $rows, $present);
+                            else $spreadsheet->getActiveSheet()->SetCellValue('B' . $rows, "-");
                         }
                         if ($j == 2) {
-                            if ($present != 0) $this->excel->getActiveSheet()->SetCellValue('C' . $rows, $present);
-                            else $this->excel->getActiveSheet()->SetCellValue('C' . $rows, "-");
+                            if ($present != 0) $spreadsheet->getActiveSheet()->SetCellValue('C' . $rows, $present);
+                            else $spreadsheet->getActiveSheet()->SetCellValue('C' . $rows, "-");
                         }
                         if ($j == 3) {
-                            if ($present != 0) $this->excel->getActiveSheet()->SetCellValue('D' . $rows, $present);
-                            else $this->excel->getActiveSheet()->SetCellValue('D' . $rows, "-");
+                            if ($present != 0) $spreadsheet->getActiveSheet()->SetCellValue('D' . $rows, $present);
+                            else $spreadsheet->getActiveSheet()->SetCellValue('D' . $rows, "-");
                         }
                         if ($j == 4) {
-                            if ($present != 0) $this->excel->getActiveSheet()->SetCellValue('E' . $rows, $present);
-                            else $this->excel->getActiveSheet()->SetCellValue('E' . $rows, "-");
+                            if ($present != 0) $spreadsheet->getActiveSheet()->SetCellValue('E' . $rows, $present);
+                            else $spreadsheet->getActiveSheet()->SetCellValue('E' . $rows, "-");
                         }
                         if ($j == 5) {
-                            if ($present != 0) $this->excel->getActiveSheet()->SetCellValue('F' . $rows, $present);
-                            else $this->excel->getActiveSheet()->SetCellValue('F' . $rows, "-");
+                            if ($present != 0) $spreadsheet->getActiveSheet()->SetCellValue('F' . $rows, $present);
+                            else $spreadsheet->getActiveSheet()->SetCellValue('F' . $rows, "-");
                         }
                         if ($j == 6) {
-                            if ($present != 0) $this->excel->getActiveSheet()->SetCellValue('G' . $rows, $present);
-                            else $this->excel->getActiveSheet()->SetCellValue('G' . $rows, "-");
+                            if ($present != 0) $spreadsheet->getActiveSheet()->SetCellValue('G' . $rows, $present);
+                            else $spreadsheet->getActiveSheet()->SetCellValue('G' . $rows, "-");
                         }
                         if ($j == 7) {
-                            if ($present != 0) $this->excel->getActiveSheet()->SetCellValue('H' . $rows, $present);
-                            else $this->excel->getActiveSheet()->SetCellValue('H' . $rows, "-");
+                            if ($present != 0) $spreadsheet->getActiveSheet()->SetCellValue('H' . $rows, $present);
+                            else $spreadsheet->getActiveSheet()->SetCellValue('H' . $rows, "-");
                         }
                         if ($j == 8) {
-                            if ($present != 0) $this->excel->getActiveSheet()->SetCellValue('I' . $rows, $present);
-                            else $this->excel->getActiveSheet()->SetCellValue('I' . $rows, "-");
+                            if ($present != 0) $spreadsheet->getActiveSheet()->SetCellValue('I' . $rows, $present);
+                            else $spreadsheet->getActiveSheet()->SetCellValue('I' . $rows, "-");
                         }
                         if ($j == 9) {
-                            if ($present != 0) $this->excel->getActiveSheet()->SetCellValue('J' . $rows, $present);
-                            else $this->excel->getActiveSheet()->SetCellValue('J' . $rows, "-");
+                            if ($present != 0) $spreadsheet->getActiveSheet()->SetCellValue('J' . $rows, $present);
+                            else $spreadsheet->getActiveSheet()->SetCellValue('J' . $rows, "-");
                         }
                         if ($j == 10) {
-                            if ($present != 0) $this->excel->getActiveSheet()->SetCellValue('K' . $rows, $present);
-                            else $this->excel->getActiveSheet()->SetCellValue('K' . $rows, "-");;
+                            if ($present != 0) $spreadsheet->getActiveSheet()->SetCellValue('K' . $rows, $present);
+                            else $spreadsheet->getActiveSheet()->SetCellValue('K' . $rows, "-");;
                         }
                         if ($j == 11) {
-                            if ($present != 0) $this->excel->getActiveSheet()->SetCellValue('L' . $rows, $present);
-                            else $this->excel->getActiveSheet()->SetCellValue('L' . $rows, "-");
+                            if ($present != 0) $spreadsheet->getActiveSheet()->SetCellValue('L' . $rows, $present);
+                            else $spreadsheet->getActiveSheet()->SetCellValue('L' . $rows, "-");
                         }
                         if ($j == 12) {
-                            if ($present != 0) $this->excel->getActiveSheet()->SetCellValue('M' . $rows, $present);
-                            else $this->excel->getActiveSheet()->SetCellValue('M' . $rows, "-");
+                            if ($present != 0) $spreadsheet->getActiveSheet()->SetCellValue('M' . $rows, $present);
+                            else $spreadsheet->getActiveSheet()->SetCellValue('M' . $rows, "-");
                         }
 
                     }
-                    $this->excel->getActiveSheet()->SetCellValue('N' . $rows, $total);
+                    $spreadsheet->getActiveSheet()->SetCellValue('N' . $rows, $total);
                     $rows++;
                 }
-                $this->load->helper('excel');
-                create_excel($this->excel, $name);
+//                $writer = new Xlsx($spreadsheet);
+//                header('Content-Type: application/vnd.ms-excel');
+//                header('Content-Disposition: attachment;filename="'. $name .'.xlsx"');
+//                header('Cache-Control: max-age=0');
+//                $writer->save('php://output');
+
+
+                header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                header('Content-Disposition: attachment;filename="'.$name.'.xlsx"');
+                header('Cache-Control: max-age=0');
+
+                $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+
+                $writer->save('php://output');
             }
         } else {
             redirect(site_url('teacher/dashboard'), 'refresh');
