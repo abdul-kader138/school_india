@@ -1,7 +1,15 @@
+<style>
+    #action-form-submit {
+        visibility: hidden;
+    }
+</style>
 <center>
     <?php
     $class_name = $this->db->get_where('class', array('class_id' => $class_id))->row()->name;
     $section_name = $this->db->get_where('section', array('section_id' => $section_id))->row()->name;
+    $start_date = "'" . $sessional_year . '-07-31' . "'";
+    $end_year = $sessional_year + 1;
+    $end_date = "'" . $end_year . '-06-30' . "'";
     ?>
     <h4><strong>Year:</strong> <?php echo $sessional_year ?></h4>
     <h4><strong>Class:</strong> <?php echo $class_name; ?></h4>
@@ -10,6 +18,18 @@
             onclick="window.print();">
         <i class="fa fa-print"></i> Print
     </button>
+    <?php
+    echo form_open('teacher/teacher_actions_yearly', 'id="action-form"');
+    ?>
+    <button type="button" class="btn btn-xs no-print pull-right" style="margin-right:15px;">
+        <a href="#" id="excel" data-action="export_excel"><i class="fa fa-file-excel-o"></i> Export To Excel</a>
+    </button>
+    <input type="hidden" name="class_id" id="class_id" value="<?php echo $class_id; ?>"/>
+    <input type="hidden" name="section_id" id="section_id" value="<?php echo $section_id; ?>"/>
+    <input type="hidden" name="sessional_year" id="sessional_year" value="<?php echo $sessional_year; ?>"/>
+    <input type="hidden" name="form_action" value="" id="form_action"/>
+    <?= form_submit('performAction', 'performAction', 'id="action-form-submit"') ?>
+    <?= form_close() ?>
 </center>
 <br>
 <hr/>
@@ -29,7 +49,7 @@
 
                 for ($i = 1; $i <= 12; $i++) {
                     ?>
-                    <td style="text-align: center;"><?php echo $teacher->getMonthName($i); ?></td>
+                    <td style="text-align: center;"><?php echo $teacher->getMonthNameFinancial($i); ?></td>
                 <?php } ?>
                 <td style="text-align: center;">Total</td>
             </tr>
@@ -40,7 +60,7 @@
             $data = array();
 
             // get all attendence Data - codelover138@gmail.com
-            $sql = 'select ids, present,name,day,dates,month from (SELECT count(attendance_id) as present,(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d")) dates,DAY(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d")) as day,month(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d")) as month,student_id as ids  FROM `attendance` where status=1 and Year(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d"))=' . $sessional_year . ' and section_id=' . $section_id . '  and attendance.class_id=' . $class_id . ' and  attendance.year="' . $running_year . '" group by month(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d")), student_id order by student_id,(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d"))) as atten INNER join student on atten.ids=student.student_id ORDER by name,dates';
+            $sql = 'select ids, present,name,day,dates,month from (SELECT count(attendance_id) as present,(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d")) dates,DAY(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d")) as day,month(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d")) as month,student_id as ids  FROM `attendance` where status=1 and  DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d") between ' . $start_date . ' and  ' . $end_date . ' and section_id=' . $section_id . '  and attendance.class_id=' . $class_id . ' group by month(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d")), student_id order by student_id,(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d"))) as atten INNER join student on atten.ids=student.student_id ORDER by name,dates';
             $data = array();
             $q = $this->db->query($sql);
             if ($q->num_rows() > 0) {
@@ -69,7 +89,7 @@
                 for ($j = 1; $j <= 12; $j++) { ?>
                     <td style="text-align: center;">
                         <?php
-                        $present = $teacher->getYearlyPresentHistory($data, $j, $row->student_id);
+                        $present = $teacher->getYearlyPresentSubject($data, $j, $row->student_id);
                         $total = $total + $present;
                         if ($present != 0) echo $present;
                         else echo "-";
@@ -104,6 +124,13 @@
                 $this.selectBoxIt(opts);
             });
         }
+
+
+        $('body').on('click', '#excel', function (e) {
+            e.preventDefault();
+            $('#form_action').val($(this).attr('data-action'));
+            $('#action-form-submit').trigger('click');
+        });
     });
 
 </script>

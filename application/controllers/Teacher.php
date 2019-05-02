@@ -11,9 +11,11 @@ if (!defined('BASEPATH'))
  */
 
 require 'vendor/autoload.php';
+
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
 class Teacher extends CI_Controller
 {
     function __construct()
@@ -1275,7 +1277,7 @@ class Teacher extends CI_Controller
     {
         $present = "0";
         foreach ($attendences_details as $info) {
-            $ids=$this->getMonthIDFinancial($info->month);
+            $ids = $this->getMonthIDFinancial($info->month);
             if ($info->ids == $student_id && $ids == $counter) {
                 $present = $info->present;
                 break;
@@ -1386,6 +1388,111 @@ class Teacher extends CI_Controller
     }
 
 
+    public function getCellByMonthDay($val)
+    {
+        $month = "";
+        switch ($val) {
+            case "1":
+                $month = "B";
+                break;
+            case "2":
+                $month = "C";
+                break;
+            case "3":
+                $month = "D";
+                break;
+            case "4":
+                $month = "E";
+                break;
+            case "5":
+                $month = "F";
+                break;
+            case "6":
+                $month = "G";
+                break;
+            case "7":
+                $month = "H";
+                break;
+            case "8":
+                $month = "I";
+                break;
+            case "9":
+                $month = "J";
+                break;
+            case "10":
+                $month = "K";
+                break;
+            case "11":
+                $month = "L";
+                break;
+            case "12":
+                $month = "M";
+                break;
+            case "13":
+                $month = "N";
+                break;
+            case "14":
+                $month = "O";
+                break;
+            case "15":
+                $month = "P";
+                break;
+            case "16":
+                $month = "Q";
+                break;
+            case "17":
+                $month = "R";
+                break;
+            case "18":
+                $month = "S";
+                break;
+            case "19":
+                $month = "T";
+                break;
+            case "20":
+                $month = "U";
+                break;
+            case "21":
+                $month = "V";
+                break;
+            case "22":
+                $month = "W";
+                break;
+            case "23":
+                $month = "X";
+                break;
+            case "24":
+                $month = "Y";
+                break;
+            case "25":
+                $month = "Z";
+                break;
+            case "26":
+                $month = "AA";
+                break;
+            case "27":
+                $month = "AB";
+                break;
+            case "28":
+                $month = "AC";
+                break;
+            case "29":
+                $month = "AD";
+                break;
+            case "30":
+                $month = "AE";
+                break;
+            case "31":
+                $month = "AF";
+                break;
+            default:
+                $month = "";
+                break;
+        }
+        return $month;
+    }
+
+
     function teacher_actions()
     {
         if ($this->session->userdata('teacher_login') != 1)
@@ -1401,24 +1508,24 @@ class Teacher extends CI_Controller
                 $class_name = $this->db->get_where('class', array('class_id' => $class_id))->row()->name;
                 $section_name = $this->db->get_where('section', array('section_id' => $section_id))->row()->name;
                 $subject_name = $this->db->get_where('subject', array('subject_id' => $subject_id))->row()->name;
-                $name="Attendance_Report_Subject_Wise_Yearly_".$class_name."_".$section_name."_".$subject_name."_".$sessional_year;
-                $start_date="'".$sessional_year.'-07-31'."'";
-                $end_year=$sessional_year+1;
-                $end_date="'".$end_year.'-06-30'."'";
+                $name = "Attendance_Report_Subject_Wise_Yearly_" . $class_name . "_" . $section_name . "_" . $subject_name . "_" . $sessional_year;
+                $start_date = "'" . $sessional_year . '-07-31' . "'";
+                $end_year = $sessional_year + 1;
+                $end_date = "'" . $end_year . '-06-30' . "'";
 
                 $spreadsheet = new Spreadsheet();
                 $spreadsheet->setActiveSheetIndex(0);
                 $spreadsheet->getActiveSheet()->setTitle("Subject_Wise_Yearly_Report");
-                $spreadsheet->getActiveSheet()->SetCellValue('G1', "St. Xavier's College, Jaipur");
-                $spreadsheet->getActiveSheet()->getStyle('G1')->getFont()->setSize(16);
-                $spreadsheet->getActiveSheet()->SetCellValue('G2', "Year:");
-                $spreadsheet->getActiveSheet()->SetCellValue('H2', $sessional_year);
-                $spreadsheet->getActiveSheet()->SetCellValue('G3', "Class:");
-                $spreadsheet->getActiveSheet()->SetCellValue('H3', $class_name);
-                $spreadsheet->getActiveSheet()->SetCellValue('G4', "Section:");
-                $spreadsheet->getActiveSheet()->SetCellValue('H4', $section_name);
-                $spreadsheet->getActiveSheet()->SetCellValue('G5', "Subject:");
-                $spreadsheet->getActiveSheet()->SetCellValue('H5', $subject_name);
+                $spreadsheet->getActiveSheet()->SetCellValue('D1', "St. Xavier's College, Jaipur");
+                $spreadsheet->getActiveSheet()->getStyle('D1')->getFont()->setSize(16);
+                $spreadsheet->getActiveSheet()->SetCellValue('D2', "Year:");
+                $spreadsheet->getActiveSheet()->SetCellValue('E2', $sessional_year);
+                $spreadsheet->getActiveSheet()->SetCellValue('D3', "Class:");
+                $spreadsheet->getActiveSheet()->SetCellValue('E3', $class_name);
+                $spreadsheet->getActiveSheet()->SetCellValue('D4', "Section:");
+                $spreadsheet->getActiveSheet()->SetCellValue('E4', $section_name);
+                $spreadsheet->getActiveSheet()->SetCellValue('D5', "Subject:");
+                $spreadsheet->getActiveSheet()->SetCellValue('E5', $subject_name);
                 $spreadsheet->getActiveSheet()->SetCellValue('A7', "Name");
                 $spreadsheet->getActiveSheet()->SetCellValue('B7', $this->getMonthNameFinancial(1));
                 $spreadsheet->getActiveSheet()->SetCellValue('C7', $this->getMonthNameFinancial(2));
@@ -1435,7 +1542,6 @@ class Teacher extends CI_Controller
                 $spreadsheet->getActiveSheet()->SetCellValue('N7', $this->getMonthNameFinancial(13));
 
 
-                $data = array();
                 $sql = 'select ids, present,name,day,dates,month from (SELECT count(attendance_id) as present,(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d")) dates,DAY(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d")) as day,month(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d")) as month,student_id as ids  FROM `attendance` where status=1 and  section_id=' . $section_id . '  and attendance.class_id=' . $class_id . ' and attendance.subject_id=' . $subject_id . '  and  DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d") between ' . $start_date . ' and  ' . $end_date . 'group by month(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d")), student_id order by student_id,(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d"))) as atten INNER join student on atten.ids=student.student_id ORDER by name,dates';
                 $data = array();
                 $q = $this->db->query($sql);
@@ -1522,11 +1628,237 @@ class Teacher extends CI_Controller
 
 
                 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-                header('Content-Disposition: attachment;filename="'.$name.'.xlsx"');
+                header('Content-Disposition: attachment;filename="' . $name . '.xlsx"');
                 header('Cache-Control: max-age=0');
 
                 $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
 
+                $writer->save('php://output');
+            }
+        } else {
+            redirect(site_url('teacher/dashboard'), 'refresh');
+        }
+    }
+
+    function teacher_actions_yearly()
+    {
+        if ($this->session->userdata('teacher_login') != 1)
+            redirect(site_url('login'), 'refresh');
+        if ($this->input->post('form_action') == 'export_excel') {
+            if ($this->input->post('form_action') == 'export_excel') {
+                $class_id = $this->input->post('class_id');
+                $section_id = $this->input->post('section_id');
+                $sessional_year = $this->input->post('sessional_year');
+                $running_year = $this->db->get_where('settings', array('type' => 'running_year'))->row()->description;
+
+                $class_name = $this->db->get_where('class', array('class_id' => $class_id))->row()->name;
+                $section_name = $this->db->get_where('section', array('section_id' => $section_id))->row()->name;
+                $name = "Attendance_Report_Yearly_" . $class_name . "_" . $section_name . "_" . $sessional_year;
+                $start_date = "'" . $sessional_year . '-07-31' . "'";
+                $end_year = $sessional_year + 1;
+                $end_date = "'" . $end_year . '-06-30' . "'";
+
+                $spreadsheet = new Spreadsheet();
+                $spreadsheet->setActiveSheetIndex(0);
+                $spreadsheet->getActiveSheet()->setTitle("Yearly_Attendance_Report");
+                $spreadsheet->getActiveSheet()->SetCellValue('D1', "St. Xavier's College, Jaipur");
+                $spreadsheet->getActiveSheet()->getStyle('D1')->getFont()->setSize(16);
+                $spreadsheet->getActiveSheet()->SetCellValue('D2', "Year:");
+                $spreadsheet->getActiveSheet()->SetCellValue('E2', $sessional_year);
+                $spreadsheet->getActiveSheet()->SetCellValue('D3', "Class:");
+                $spreadsheet->getActiveSheet()->SetCellValue('E3', $class_name);
+                $spreadsheet->getActiveSheet()->SetCellValue('D4', "Section:");
+                $spreadsheet->getActiveSheet()->SetCellValue('E4', $section_name);
+                $spreadsheet->getActiveSheet()->SetCellValue('A7', "Name");
+                $spreadsheet->getActiveSheet()->SetCellValue('B7', $this->getMonthNameFinancial(1));
+                $spreadsheet->getActiveSheet()->SetCellValue('C7', $this->getMonthNameFinancial(2));
+                $spreadsheet->getActiveSheet()->SetCellValue('D7', $this->getMonthNameFinancial(3));
+                $spreadsheet->getActiveSheet()->SetCellValue('E7', $this->getMonthNameFinancial(4));
+                $spreadsheet->getActiveSheet()->SetCellValue('F7', $this->getMonthNameFinancial(5));
+                $spreadsheet->getActiveSheet()->SetCellValue('G7', $this->getMonthNameFinancial(6));
+                $spreadsheet->getActiveSheet()->SetCellValue('H7', $this->getMonthNameFinancial(7));
+                $spreadsheet->getActiveSheet()->SetCellValue('I7', $this->getMonthNameFinancial(8));
+                $spreadsheet->getActiveSheet()->SetCellValue('J7', $this->getMonthNameFinancial(9));
+                $spreadsheet->getActiveSheet()->SetCellValue('K7', $this->getMonthNameFinancial(10));
+                $spreadsheet->getActiveSheet()->SetCellValue('L7', $this->getMonthNameFinancial(11));
+                $spreadsheet->getActiveSheet()->SetCellValue('M7', $this->getMonthNameFinancial(12));
+                $spreadsheet->getActiveSheet()->SetCellValue('N7', $this->getMonthNameFinancial(13));
+
+
+                $data = array();
+                $sql = 'select ids, present,name,day,dates,month from (SELECT count(attendance_id) as present,(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d")) dates,DAY(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d")) as day,month(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d")) as month,student_id as ids  FROM `attendance` where status=1 and  DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d") between ' . $start_date . ' and  ' . $end_date . ' and section_id=' . $section_id . '  and attendance.class_id=' . $class_id . ' group by month(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d")), student_id order by student_id,(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d"))) as atten INNER join student on atten.ids=student.student_id ORDER by name,dates';
+                $q = $this->db->query($sql);
+                if ($q->num_rows() > 0) {
+                    foreach (($q->result()) as $row) {
+                        $data[] = $row;
+                    }
+                }
+
+
+                $sql_enroll = 'SELECT * FROM enroll inner join student on enroll.student_id=student.student_id where enroll.class_id=' . $class_id . ' and enroll.section_id=' . $section_id . ' and year="' . $running_year . '" order by student.name';
+                $student_data = array();
+                $q = $this->db->query($sql_enroll);
+                if ($q->num_rows() > 0) {
+                    foreach (($q->result()) as $row) {
+                        $student_data[] = $row;
+                    }
+                }
+                $rows = 8;
+                foreach ($student_data as $row) {
+                    $spreadsheet->getActiveSheet()->SetCellValue('A' . $rows, $row->name);
+                    $total = 0;
+                    for ($j = 1; $j <= 12; $j++) {
+                        $present = $this->getYearlyPresentSubject($data, $j, $row->student_id);
+                        $total = $total + $present;
+                        if ($j == 1) {
+                            if ($present != 0) $spreadsheet->getActiveSheet()->SetCellValue('B' . $rows, $present);
+                            else $spreadsheet->getActiveSheet()->SetCellValue('B' . $rows, "-");
+                        }
+                        if ($j == 2) {
+                            if ($present != 0) $spreadsheet->getActiveSheet()->SetCellValue('C' . $rows, $present);
+                            else $spreadsheet->getActiveSheet()->SetCellValue('C' . $rows, "-");
+                        }
+                        if ($j == 3) {
+                            if ($present != 0) $spreadsheet->getActiveSheet()->SetCellValue('D' . $rows, $present);
+                            else $spreadsheet->getActiveSheet()->SetCellValue('D' . $rows, "-");
+                        }
+                        if ($j == 4) {
+                            if ($present != 0) $spreadsheet->getActiveSheet()->SetCellValue('E' . $rows, $present);
+                            else $spreadsheet->getActiveSheet()->SetCellValue('E' . $rows, "-");
+                        }
+                        if ($j == 5) {
+                            if ($present != 0) $spreadsheet->getActiveSheet()->SetCellValue('F' . $rows, $present);
+                            else $spreadsheet->getActiveSheet()->SetCellValue('F' . $rows, "-");
+                        }
+                        if ($j == 6) {
+                            if ($present != 0) $spreadsheet->getActiveSheet()->SetCellValue('G' . $rows, $present);
+                            else $spreadsheet->getActiveSheet()->SetCellValue('G' . $rows, "-");
+                        }
+                        if ($j == 7) {
+                            if ($present != 0) $spreadsheet->getActiveSheet()->SetCellValue('H' . $rows, $present);
+                            else $spreadsheet->getActiveSheet()->SetCellValue('H' . $rows, "-");
+                        }
+                        if ($j == 8) {
+                            if ($present != 0) $spreadsheet->getActiveSheet()->SetCellValue('I' . $rows, $present);
+                            else $spreadsheet->getActiveSheet()->SetCellValue('I' . $rows, "-");
+                        }
+                        if ($j == 9) {
+                            if ($present != 0) $spreadsheet->getActiveSheet()->SetCellValue('J' . $rows, $present);
+                            else $spreadsheet->getActiveSheet()->SetCellValue('J' . $rows, "-");
+                        }
+                        if ($j == 10) {
+                            if ($present != 0) $spreadsheet->getActiveSheet()->SetCellValue('K' . $rows, $present);
+                            else $spreadsheet->getActiveSheet()->SetCellValue('K' . $rows, "-");;
+                        }
+                        if ($j == 11) {
+                            if ($present != 0) $spreadsheet->getActiveSheet()->SetCellValue('L' . $rows, $present);
+                            else $spreadsheet->getActiveSheet()->SetCellValue('L' . $rows, "-");
+                        }
+                        if ($j == 12) {
+                            if ($present != 0) $spreadsheet->getActiveSheet()->SetCellValue('M' . $rows, $present);
+                            else $spreadsheet->getActiveSheet()->SetCellValue('M' . $rows, "-");
+                        }
+
+                    }
+                    $spreadsheet->getActiveSheet()->SetCellValue('N' . $rows, $total);
+                    $rows++;
+                }
+//                $writer = new Xlsx($spreadsheet);
+//                header('Content-Type: application/vnd.ms-excel');
+//                header('Content-Disposition: attachment;filename="'. $name .'.xlsx"');
+//                header('Cache-Control: max-age=0');
+//                $writer->save('php://output');
+
+
+                header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                header('Content-Disposition: attachment;filename="' . $name . '.xlsx"');
+                header('Cache-Control: max-age=0');
+
+                $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+
+                $writer->save('php://output');
+            }
+        } else {
+            redirect(site_url('teacher/dashboard'), 'refresh');
+        }
+    }
+
+    function teacher_actions_monthly()
+    {
+        if ($this->session->userdata('teacher_login') != 1)
+            redirect(site_url('login'), 'refresh');
+        if ($this->input->post('form_action') == 'export_excel') {
+            if ($this->input->post('form_action') == 'export_excel') {
+                $class_id = $this->input->post('class_id');
+                $section_id = $this->input->post('section_id');
+                $month = $this->input->post('month');
+                $sessional_year = $this->input->post('sessional_year');
+                $running_year = $this->db->get_where('settings', array('type' => 'running_year'))->row()->description;
+
+                $class_name = $this->db->get_where('class', array('class_id' => $class_id))->row()->name;
+                $section_name = $this->db->get_where('section', array('section_id' => $section_id))->row()->name;
+
+                $monthName = date("F", mktime(0, 0, 0, $month, 10));
+                $name = "Attendance_Report_Monthly_" . $class_name . "_" . $section_name . "_" . $monthName;
+                $year = explode('-', $running_year);
+                $days = cal_days_in_month(CAL_GREGORIAN, $month, $sessional_year);
+
+                $spreadsheet = new Spreadsheet();
+                $spreadsheet->setActiveSheetIndex(0);
+                $spreadsheet->getActiveSheet()->setTitle("Monthly_Attendance_Report");
+                $spreadsheet->getActiveSheet()->SetCellValue('D1', "St. Xavier's College, Jaipur");
+                $spreadsheet->getActiveSheet()->getStyle('D1')->getFont()->setSize(16);
+                $spreadsheet->getActiveSheet()->SetCellValue('D2', "Year:");
+                $spreadsheet->getActiveSheet()->SetCellValue('E2', $sessional_year);
+                $spreadsheet->getActiveSheet()->SetCellValue('D3', "Month:");
+                $spreadsheet->getActiveSheet()->SetCellValue('E3', $monthName);
+                $spreadsheet->getActiveSheet()->SetCellValue('D4', "Class:");
+                $spreadsheet->getActiveSheet()->SetCellValue('E4', $class_name);
+                $spreadsheet->getActiveSheet()->SetCellValue('D5', "Section:");
+                $spreadsheet->getActiveSheet()->SetCellValue('E5', $section_name);
+                $spreadsheet->getActiveSheet()->SetCellValue("A7", "Name");
+                for ($i = 1; $i <= $days; $i++) {
+                    $spreadsheet->getActiveSheet()->SetCellValue($this->getCellByMonthDay($i) . "7", $i);
+                }
+                $spreadsheet->getActiveSheet()->SetCellValue('AG7', "Total");
+
+
+                $sql = 'select ids, present,name,day,dates,month from (SELECT count(attendance_id) as present,(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d")) dates,DAY(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d")) as day,MONTH(FROM_UNIXTIME(timestamp)) as month,student_id as ids  FROM `attendance` where status=1 and MONTH(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d"))=' . $month . ' and section_id=' . $section_id . '  and attendance.class_id=' . $class_id . ' and  Year(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d"))="' . $sessional_year . '" group by (DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d")), student_id order by student_id,(DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(timestamp), "+00:00", "+00:30"), "%Y-%m-%d"))) as atten INNER join student on atten.ids=student.student_id ORDER by name,dates';
+                $data = array();
+                $q = $this->db->query($sql);
+                if ($q->num_rows() > 0) {
+                    foreach (($q->result()) as $row) {
+                        $data[] = $row;
+                    }
+                }
+                // get all enrolled student  - codelover138@gmail.com
+                $sql_enroll = 'SELECT * FROM enroll inner join student on enroll.student_id=student.student_id where enroll.class_id=' . $class_id . ' and enroll.section_id=' . $section_id . ' and year="' . $running_year . '" order by student.name';
+                $student_data = array();
+                $q = $this->db->query($sql_enroll);
+                if ($q->num_rows() > 0) {
+                    foreach (($q->result()) as $row) {
+                        $student_data[] = $row;
+                    }
+                }
+                $rows = 8;
+                foreach ($student_data as $row) {
+                    $spreadsheet->getActiveSheet()->SetCellValue('A' . $rows, $row->name);
+                    $total = 0;
+                    for ($j = 1; $j <= $days; $j++) {
+                        $present = $this->getPresentHistory($data, $j, $row->student_id);
+                        $total = $total + $present;
+                        if ($present != 0) $spreadsheet->getActiveSheet()->SetCellValue( $this->getCellByMonthDay($j) . $rows, $present);
+                        else $spreadsheet->getActiveSheet()->SetCellValue($this->getCellByMonthDay($j) . $rows, "-");
+
+                    }
+                    $spreadsheet->getActiveSheet()->SetCellValue('AG' . $rows, $total);
+                    $rows++;
+                }
+
+                header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                header('Content-Disposition: attachment;filename="' . $name . '.xlsx"');
+                header('Cache-Control: max-age=0');
+                $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
                 $writer->save('php://output');
             }
         } else {
@@ -1575,7 +1907,7 @@ class Teacher extends CI_Controller
             case 6:
                 $month = 12;
                 break;
-             default:
+            default:
                 $month = 0;
                 break;
         }

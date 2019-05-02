@@ -65,29 +65,39 @@
                     <?php
                     $count = 1;
                     $select_id = 0;
-                    $attendance_of_students = $this->db->get_where('attendance', array(
-                                'class_id' => $class_id,
-                                'section_id' => $section_id,
-                                'subject_id' => $subject_id,
-                                'teacher_id' => $teacher_id,
-                                'period' => $period,
-                                'year' => $running_year,
-                                'timestamp' => $timestamp
-                            ))->result_array();
+
+                    $sql="SELECT attendance.student_id as student_id,attendance.status as status,attendance.attendance_id as attendance_id FROM attendance inner join student on student.student_id=attendance.student_id where class_id=" . $class_id . " and section_id=" . $section_id . " and subject_id=" . $subject_id . " and year='" . $running_year . "' and teacher_id=" . $teacher_id . " and timestamp=" . $timestamp . " order by student.name asc";
+
+                    $attendance_of_students = array();
+                    $q = $this->db->query($sql);
+                    if ($q->num_rows() > 0) {
+                        foreach (($q->result()) as $row) {
+                            $attendance_of_students[] = $row;
+                        }
+                    }
+//                    $attendance_of_students = $this->db->get_where('attendance', array(
+//                                'class_id' => $class_id,
+//                                'section_id' => $section_id,
+//                                'subject_id' => $subject_id,
+//                                'teacher_id' => $teacher_id,
+//                                'period' => $period,
+//                                'year' => $running_year,
+//                                'timestamp' => $timestamp
+//                            ))->join('student','attendance.student_id=student.student_id','inner')->result_array();
                     foreach ($attendance_of_students as $row):
                         ?>
                         <tr>
                             <td><?php echo $count++; ?></td>
                             <td>
-                                <?php echo $this->db->get_where('student', array('student_id' => $row['student_id']))->row()->student_code; ?>
+                                <?php echo $this->db->get_where('student', array('student_id' => $row->student_id))->row()->student_code; ?>
                             </td>
                             <td>
-                                <?php echo $this->db->get_where('student', array('student_id' => $row['student_id']))->row()->name; ?>
+                                <?php echo $this->db->get_where('student', array('student_id' => $row->student_id))->row()->name; ?>
                             </td>
                             <td>
-                                <input type="radio" name="status_<?php echo $row['attendance_id']; ?>" value="0" <?php if ($row['status'] == 0) echo 'checked'; ?>>&nbsp;<?php echo get_phrase('undefined'); ?> &nbsp;
-                                <input type="radio" name="status_<?php echo $row['attendance_id']; ?>" value="1" <?php if ($row['status'] == 1) echo 'checked'; ?>>&nbsp;<?php echo get_phrase('present'); ?> &nbsp;
-                                <input type="radio" name="status_<?php echo $row['attendance_id']; ?>" value="2" <?php if ($row['status'] == 2) echo 'checked'; ?>>&nbsp;<?php echo get_phrase('absent'); ?> &nbsp;
+                                <input type="radio" name="status_<?php echo $row->attendance_id; ?>" value="0" <?php if ($row->status == 0) echo 'checked'; ?>>&nbsp;<?php echo get_phrase('undefined'); ?> &nbsp;
+                                <input type="radio" name="status_<?php echo $row->attendance_id; ?>" value="1" <?php if ($row->status == 1) echo 'checked'; ?>>&nbsp;<?php echo get_phrase('present'); ?> &nbsp;
+                                <input type="radio" name="status_<?php echo $row->attendance_id; ?>" value="2" <?php if ($row->status == 2) echo 'checked'; ?>>&nbsp;<?php echo get_phrase('absent'); ?> &nbsp;
                             </td>
                         </tr>
                     <?php

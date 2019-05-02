@@ -1,3 +1,8 @@
+<style>
+    #action-form-submit {
+        visibility: hidden;
+    }
+</style>
 <center>
     <?php
     $class_name = $this->db->get_where('class', array('class_id' => $class_id))->row()->name;
@@ -7,9 +12,24 @@
     <h4><strong>Month:</strong> <?php echo $monthName; ?></h4>
     <h4><strong>Class:</strong> <?php echo $class_name; ?></h4>
     <h4><strong>Section:</strong> <?php echo $section_name; ?></h4>
-    <button type="button" class="btn btn-xs btn-default no-print pull-right" style="margin-right:15px;" onclick="window.print();">
+    <button type="button" class="btn btn-xs btn-default no-print pull-right" style="margin-right:15px;"
+            onclick="window.print();">
         <i class="fa fa-print"></i> Print
     </button>
+
+    <?php
+    echo form_open('teacher/teacher_actions_monthly', 'id="action-form"');
+    ?>
+    <button type="button" class="btn btn-xs no-print pull-right" style="margin-right:15px;">
+        <a href="#" id="excel" data-action="export_excel"><i class="fa fa-file-excel-o"></i> Export To Excel</a>
+    </button>
+    <input type="hidden" name="class_id" id="class_id" value="<?php echo $class_id; ?>"/>
+    <input type="hidden" name="section_id" id="section_id" value="<?php echo $section_id; ?>"/>
+    <input type="hidden" name="sessional_year" id="sessional_year" value="<?php echo $sessional_year; ?>"/>
+    <input type="hidden" name="month" id="month" value="<?php echo $month; ?>"/>
+    <input type="hidden" name="form_action" value="" id="form_action"/>
+    <?= form_submit('performAction', 'performAction', 'id="action-form-submit"') ?>
+    <?= form_close() ?>
 </center>
 
 <br>
@@ -54,7 +74,9 @@
                     $student_data[] = $row;
                 }
             }
-            foreach ($student_data as $row): ?>
+            foreach ($student_data
+
+            as $row): ?>
             <tr>
                 <td style="text-align: center;">
                     <?php echo $row->name; ?>
@@ -66,7 +88,7 @@
                         <?php
                         $present = $teacher->getPresentHistory($data, $j, $row->student_id);
                         $total = $total + $present;
-                        if($present != 0) echo  $present;
+                        if ($present != 0) echo $present;
                         else echo "-";
                         ?>
                     </td>
@@ -105,6 +127,13 @@
                 $this.selectBoxIt(opts);
             });
         }
+
+        $('body').on('click', '#excel', function (e) {
+            e.preventDefault();
+            $('#form_action').val($(this).attr('data-action'));
+            $('#action-form-submit').trigger('click');
+        });
+
     });
 
 </script>
