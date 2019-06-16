@@ -1847,7 +1847,7 @@ class Teacher extends CI_Controller
                     for ($j = 1; $j <= $days; $j++) {
                         $present = $this->getPresentHistory($data, $j, $row->student_id);
                         $total = $total + $present;
-                        if ($present != 0) $spreadsheet->getActiveSheet()->SetCellValue( $this->getCellByMonthDay($j) . $rows, $present);
+                        if ($present != 0) $spreadsheet->getActiveSheet()->SetCellValue($this->getCellByMonthDay($j) . $rows, $present);
                         else $spreadsheet->getActiveSheet()->SetCellValue($this->getCellByMonthDay($j) . $rows, "-");
 
                     }
@@ -1859,6 +1859,91 @@ class Teacher extends CI_Controller
                 header('Content-Disposition: attachment;filename="' . $name . '.xlsx"');
                 header('Cache-Control: max-age=0');
                 $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+                $writer->save('php://output');
+            }
+        } else {
+            redirect(site_url('teacher/dashboard'), 'refresh');
+        }
+    }
+
+
+    function student_information_actions()
+    {
+        if ($this->session->userdata('teacher_login') != 1)
+            redirect(site_url('login'), 'refresh');
+        if ($this->input->post('form_action') == 'export_excel') {
+            if ($this->input->post('form_action') == 'export_excel') {
+                $class_id = $this->input->post('class_id');
+                $section_id = $this->input->post('section_id');
+                $year = $this->input->post('year');
+                $running_year = $this->db->get_where('settings', array('type' => 'running_year'))->row()->description;
+
+                $class_name = $this->db->get_where('class', array('class_id' => $class_id))->row()->name;
+                $section_name = $this->db->get_where('section', array('section_id' => $section_id))->row()->name;
+
+                $spreadsheet = new Spreadsheet();
+                $spreadsheet->setActiveSheetIndex(0);
+                $spreadsheet->getActiveSheet()->setTitle("Subject_Wise_Yearly_Report");
+                $spreadsheet->getActiveSheet()->SetCellValue('D1', "St. Xavier's College, Jaipur");
+                $spreadsheet->getActiveSheet()->getStyle('D1')->getFont()->setSize(16);
+                $spreadsheet->getActiveSheet()->SetCellValue('D2', "Year:");
+                $spreadsheet->getActiveSheet()->SetCellValue('E2', $year);
+                $spreadsheet->getActiveSheet()->SetCellValue('D3', "Class:");
+                $spreadsheet->getActiveSheet()->SetCellValue('E3', $class_name);
+                $spreadsheet->getActiveSheet()->SetCellValue('A7', "Student_Registration_No");
+                $spreadsheet->getActiveSheet()->SetCellValue('B7', "Section_Name");
+                $spreadsheet->getActiveSheet()->SetCellValue('C7', "Name");
+                $spreadsheet->getActiveSheet()->SetCellValue('D7', "Sex");
+                $spreadsheet->getActiveSheet()->SetCellValue('E7', "Address");
+                $spreadsheet->getActiveSheet()->SetCellValue('F7', "Phone");
+                $spreadsheet->getActiveSheet()->SetCellValue('G7', "Email");
+                $spreadsheet->getActiveSheet()->SetCellValue('H7', "Parent_Name");
+                $spreadsheet->getActiveSheet()->SetCellValue('I7', "Parent_Phone");
+                $spreadsheet->getActiveSheet()->SetCellValue('J7', "Parent_Address");
+                $spreadsheet->getActiveSheet()->SetCellValue('K7', "Parent_Email");
+
+                $data = array();
+                $this->db->select('student.*,enroll.student_id,enroll.section_id,section.name as sname,parent.name as pname, parent.address as paddress, parent.email as pemail,parent.phone as pphone')
+                    ->join('student', 'student.student_id=enroll.student_id', 'left')
+                    ->join('section', 'section.section_id=enroll.section_id', 'left')
+                    ->join('parent', 'parent.parent_id=student.parent_id', 'left');
+                $this->db->order_by('enroll.section_id', 'asc');
+                $q = $this->db->get_where('enroll', array(
+                    'enroll.class_id' => $class_id, 'year' => $running_year
+                ));
+                if ($q->num_rows() > 0) {
+                    foreach (($q->result()) as $row) {
+                        $data[] = $row;
+                    }
+                }
+                $rows = 8;
+                foreach ($data as $row) {
+                    $spreadsheet->getActiveSheet()->SetCellValue('A' . $rows, $row->student_code);
+                    $spreadsheet->getActiveSheet()->SetCellValue('B' . $rows, $row->sname);
+                    $spreadsheet->getActiveSheet()->SetCellValue('C' . $rows, $row->name);
+                    $spreadsheet->getActiveSheet()->SetCellValue('D' . $rows, $row->sex);
+                    $spreadsheet->getActiveSheet()->SetCellValue('E' . $rows, $row->address);
+                    $spreadsheet->getActiveSheet()->SetCellValue('F' . $rows, $row->phone);
+                    $spreadsheet->getActiveSheet()->SetCellValue('G' . $rows, $row->email);
+                    $spreadsheet->getActiveSheet()->SetCellValue('H' . $rows, $row->pname);
+                    $spreadsheet->getActiveSheet()->SetCellValue('I' . $rows, $row->pphone);
+                    $spreadsheet->getActiveSheet()->SetCellValue('J' . $rows, $row->paddress);
+                    $spreadsheet->getActiveSheet()->SetCellValue('K' . $rows, $row->pemail);
+                    $rows++;
+                }
+//                $writer = new Xlsx($spreadsheet);
+//                header('Content-Type: application/vnd.ms-excel');
+//                header('Content-Disposition: attachment;filename="'. $name .'.xlsx"');
+//                header('Cache-Control: max-age=0');
+//                $writer->save('php://output');
+
+
+                header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                header('Content-Disposition: attachment;filename="' . $class_name . '.xlsx"');
+                header('Cache-Control: max-age=0');
+
+                $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+
                 $writer->save('php://output');
             }
         } else {
